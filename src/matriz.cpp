@@ -92,12 +92,18 @@ Matriz Matriz::Escalonada()
 
 	unsigned int currentCol = 0;
 
-	for(unsigned int currentFil = 0; currentFil < result.GetCantidadFilas(); currentFil++)
+	for(unsigned int currentFil = 0; currentFil < result.GetCantidadFilas() && currentCol < result.GetCantidadColumnas() - 1; currentFil++)
 	{
 		for(unsigned int fil = currentFil+1; fil < result.GetCantidadFilas(); fil++)
 		{
-			float escalar = -((float)this->Get(fil, currentCol)) / ((float)this->Get(currentFil, currentCol));
+			float srcVal = ((float)result.Get(currentFil, currentCol));
+			float dstVal = -((float)result.Get(fil, currentCol));
+
+			float escalar = dstVal / srcVal;
 			result.GaussSumarMultiplo(currentFil, fil, escalar);
+
+			std::cout << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;
+			std::cout << result << std::endl;
 		}
 
 		currentCol++;
