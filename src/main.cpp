@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	InputLoader inputLoader;
 
 
-	//Matriz* D = inputLoader.Load("../Tests/test_001.txt");
+	//Matriz* W = inputLoader.Load("../Tests/test_001.txt");
 
 	//std::cout << *D;
 
@@ -81,16 +81,27 @@ void testMul()
 
 void testGauss()
 {
-	Matriz m1(3, 3, 0);
+	Matriz m1(4, 5, 0);
 	m1.Set(0, 0, -8);
 	m1.Set(0, 1, 0);
 	m1.Set(0, 2, 1);
+	m1.Set(0, 3, 2);
+	m1.Set(0, 4, 18);
 	m1.Set(1, 0, 1);
 	m1.Set(1, 1, 6);
 	m1.Set(1, 2, 21);
+	m1.Set(1, 3, 1);
+	m1.Set(1, 4, 1.5);
 	m1.Set(2, 0, -7);
 	m1.Set(2, 1, -10);
 	m1.Set(2, 2, 4);
+	m1.Set(2, 3, 10);
+	m1.Set(2, 4, -1);
+	m1.Set(3, 0, -5);
+	m1.Set(3, 1, 11);
+	m1.Set(3, 2, 0);
+	m1.Set(3, 3, 0);
+	m1.Set(3, 4, 5);
 
 	std::cout << m1 << std::endl;
 
