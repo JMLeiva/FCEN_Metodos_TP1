@@ -1,6 +1,6 @@
 #include <iostream>
 #include "helpers/InputLoader.h"
-#include "matriz.h"
+#include "MatrizStandard.h"
 
 void testSum();
 void testMul();
@@ -10,15 +10,15 @@ int main(int argc, char* argv[])
 {
 	InputLoader inputLoader;
 
+	Matriz* W = inputLoader.Load("../Tests/test_001.txt");
 
-	//Matriz* W = inputLoader.Load("../Tests/test_001.txt");
+	std::cout << *W;
+	//testSum();
+	//testMul();
+	//testGauss();
 
-	//std::cout << *D;
 
-	testGauss();
-
-
-	//delete D;
+	delete W;
 
 	return 0;
 }
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 
 void testSum()
 {
-	Matriz m1(3, 3, 0);
+	MatrizStandard m1(3, 3, 0);
 	m1.Set(0, 0, 2);
 	m1.Set(0, 1, 10);
 	m1.Set(0, 2, 0);
@@ -40,7 +40,7 @@ void testSum()
 
 	std::cout << m1 << std::endl;
 
-	Matriz m2(3, 3, 0);
+	MatrizStandard m2(3, 3, 0);
 	m2.Set(0, 0, -8);
 	m2.Set(0, 1, 0);
 	m2.Set(0, 2, 1);
@@ -58,7 +58,7 @@ void testSum()
 
 void testMul()
 {
-	Matriz m1(3, 2, 0);
+	MatrizStandard m1(3, 2, 0);
 	m1.Set(0, 0, 2);
 	m1.Set(0, 1, 10);
 	m1.Set(1, 0, 1);
@@ -68,7 +68,7 @@ void testMul()
 
 	std::cout << m1 << std::endl;
 
-	Matriz m2(2, 2, 0);
+	MatrizStandard m2(2, 2, 0);
 	m2.Set(0, 0, -8);
 	m2.Set(0, 1, 0);
 	m2.Set(1, 0, 1);
@@ -81,7 +81,7 @@ void testMul()
 
 void testGauss()
 {
-	Matriz m1(4, 5, 0);
+	MatrizStandard m1(4, 5, 0);
 	m1.Set(0, 0, -8);
 	m1.Set(0, 1, 0);
 	m1.Set(0, 2, 1);
