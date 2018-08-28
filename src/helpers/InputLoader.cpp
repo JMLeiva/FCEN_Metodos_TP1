@@ -8,6 +8,8 @@
 #include "InputLoader.h"
 #include <iostream>
 #include <fstream>
+#include "../MatrizRala.h"
+#include "../matriz.h"
 
 using namespace std;
 
@@ -39,7 +41,7 @@ Matriz* InputLoader::Load(const char* path)
 	file >> numeroDeLinks;
 	cout << "Numero de links: " << numeroDeLinks << endl;
 
-	Matriz* matriz = new Matriz(numeroDePaginas, numeroDePaginas, 0);
+	Matriz* matriz = new MatrizRala(numeroDePaginas, numeroDePaginas);
 
 	for(unsigned int link = 0; link < numeroDeLinks; link++)
 	{
@@ -55,6 +57,7 @@ Matriz* InputLoader::Load(const char* path)
 	file.close();
 
 	return matriz;
+	return NULL;
 }
 
 InputLoader::~InputLoader() {

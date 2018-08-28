@@ -2,115 +2,98 @@
 #include <assert.h>
 #include <iomanip>
 
+
+Matriz::Matriz()
+{
+	this->filas = 0;
+	this->columnas = 0;
+}
+
 Matriz::Matriz(const Matriz& m)
 {
 	this->filas = m.GetCantidadFilas();
 	this->columnas = m.GetCantidadColumnas();
-
-	unsigned int size = m.GetCantidadFilas() * m.GetCantidadColumnas();
-
-	this->datos = new float[size];
-
-	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
-	{
-		for(unsigned int col = 0; col < m.GetCantidadColumnas(); col++)
-		{
-			this->Set(fil, col, m.Get(fil, col));
-		}
-	}
 }
 
 Matriz::Matriz(const unsigned int filas, const unsigned int columnas)
 {
 	this->filas = filas;
 	this->columnas = columnas;
-	this->datos = new float[filas * columnas];
 }
 
-Matriz::Matriz(const unsigned int filas, const unsigned int columnas, const float fill)
+void Matriz::SetTamano(const unsigned int filas, const unsigned int columnas)
 {
-	// TODO llamar al otro constructor
 	this->filas = filas;
 	this->columnas = columnas;
-	this->datos = new float[filas * columnas];
-
-	for(unsigned int i = 0; i < filas * columnas; i++)
-	{
-		this->datos[i] = fill;
-	}
 }
 
 Matriz::~Matriz()
 {
-	delete datos;
+
 }
 
-Matriz Matriz::operator+(const Matriz& m)
+void Matriz::Sumar(const Matriz& m1, const Matriz& m2, Matriz* out)
 {
-	assert(this->GetCantidadColumnas() == m.GetCantidadColumnas());
-	assert(this->GetCantidadFilas() == m.GetCantidadFilas());
+	assert(m1.GetCantidadColumnas() == m2.GetCantidadColumnas());
+	assert(m2.GetCantidadFilas() == m2.GetCantidadFilas());
 
-	Matriz result = Matriz(this->GetCantidadFilas(), this->GetCantidadColumnas());
+	out->SetTamano(m1.GetCantidadFilas(), m1.GetCantidadColumnas());
 
-	for(unsigned int i = 0; i < GetCantidadFilas() * GetCantidadColumnas(); i++)
+	for(unsigned int fil = 0; fil < m1.GetCantidadFilas(); fil++)
 	{
-		result.datos[i] = this->datos[i] + m.datos[i];
+		for(unsigned int col = 0; col < m1.GetCantidadColumnas(); col++)
+		{
+			out->Set(fil, col, m1.Get(fil, col) + m2.Get(fil, col));
+		}
 	}
-
-	return result;
 }
 
-Matriz Matriz::operator*(const Matriz& m)
+void Matriz::Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out)
 {
-	assert(this->GetCantidadColumnas() == m.GetCantidadFilas());
+	assert(m1.GetCantidadColumnas() == m2.GetCantidadFilas());
+	out->SetTamano(m1.GetCantidadFilas(), m2.GetCantidadColumnas());
 
-	Matriz result = Matriz(this->GetCantidadFilas(), m.GetCantidadColumnas());
-
-	for(unsigned int fil = 0; fil < this->GetCantidadFilas(); fil++)
+	for(unsigned int fil = 0; fil < m1.GetCantidadFilas(); fil++)
 	{
-		for(unsigned int col = 0; col < m.GetCantidadColumnas(); col++)
+		for(unsigned int col = 0; col < m2.GetCantidadColumnas(); col++)
 		{
 			int accum = 0;
 
-			for(unsigned int i = 0; i < this->GetCantidadColumnas(); i++)
+			for(unsigned int i = 0; i < m1.GetCantidadColumnas(); i++)
 			{
-				accum += this->Get(fil, i) * m.Get(i, col);
+				accum += m1.Get(fil, i) * m2.Get(i, col);
 			}
 
-			result.Set(fil, col, accum);
+			out->Set(fil, col, accum);
 		}
 	}
-
-	return result;
 }
 
 
-Matriz Matriz::Escalonada()
+Matriz& Matriz::Escalonada()
 {
 	// Eliminacion Gaussiana
-	Matriz result = Matriz(*this);
-
 	unsigned int currentCol = 0;
 
-	for(unsigned int currentFil = 0; currentFil < result.GetCantidadFilas() && currentCol < result.GetCantidadColumnas() - 1; currentFil++)
+	for(unsigned int currentFil = 0; currentFil < this->GetCantidadFilas() && currentCol < this->GetCantidadColumnas() - 1; currentFil++)
 	{
-		for(unsigned int fil = currentFil+1; fil < result.GetCantidadFilas(); fil++)
+		for(unsigned int fil = currentFil+1; fil < this->GetCantidadFilas(); fil++)
 		{
-			float srcVal = ((float)result.Get(currentFil, currentCol));
-			float dstVal = -((float)result.Get(fil, currentCol));
+			float srcVal = (this->Get(currentFil, currentCol));
+			float dstVal = -(this->Get(fil, currentCol));
 
 			float escalar = dstVal / srcVal;
-			result.GaussSumarMultiplo(currentFil, fil, escalar);
+			this->GaussSumarMultiplo(currentFil, fil, escalar);
 
 			std::cout << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;
-			std::cout << result << std::endl;
+			std::cout << *this << std::endl;
 		}
 
 		currentCol++;
 	}
 
 
-	return result;
+	return *this;
 }
 
 void Matriz::GaussMultiplicarFila(unsigned int fila, float escalar)
@@ -123,6 +106,9 @@ void Matriz::GaussMultiplicarFila(unsigned int fila, float escalar)
 
 void Matriz::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar)
 {
+	assert(filaSrc < this->GetCantidadFilas());
+	assert(filaDst < this->GetCantidadFilas());
+
 	for(unsigned int col = 0; col < this->GetCantidadColumnas(); col++)
 	{
 		float srcVal = this->Get(filaSrc, col);
@@ -149,21 +135,6 @@ unsigned int Matriz::GetCantidadColumnas() const
 	return columnas;
 }
 
-void Matriz::Set(const unsigned int fil, const unsigned int col, const float val)
-{
-	CheckPosicionesValidas(fil, col);
-
-	unsigned int indice = this->IndiceParaPosiciones(fil, col);
-	this->datos[indice] = val;
-}
-
-float Matriz::Get(const unsigned int fil, const unsigned int col) const
-{
-	CheckPosicionesValidas(fil, col);
-
-	unsigned int indice = this->IndiceParaPosiciones(fil, col);
-	return this->datos[indice];
-}
 
 void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int col) const
 {
@@ -187,3 +158,4 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 
     return os;
 }
+

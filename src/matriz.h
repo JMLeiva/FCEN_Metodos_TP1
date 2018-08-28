@@ -6,31 +6,33 @@
 class Matriz
 {
 public:
-
 	Matriz(const Matriz& m);
 	Matriz(const unsigned int filas, const unsigned int columnas);
-	Matriz(const unsigned int filas, const unsigned int columnas, const float fill);
-	~Matriz();
+	virtual ~Matriz();
+
 
 	unsigned int GetCantidadFilas() const;
 	unsigned int GetCantidadColumnas() const;
-	void Set(const unsigned int fil, const unsigned int col, const float val);
-	float Get(const unsigned int fil, const unsigned int col) const;
-	Matriz operator+(const Matriz& m);
-	Matriz operator*(const Matriz& m);
-	Matriz Escalonada();
+	virtual void Set(const unsigned int fil, const unsigned int col, const float val) = 0;
+	virtual float Get(const unsigned int fil, const unsigned int col) const= 0;
+	Matriz& Escalonada();
+	static void Sumar(const Matriz& m1, const Matriz& m2, Matriz* out);
+	static void Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out);
+
+protected:
+	Matriz();
+	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
+
+	void CheckPosicionesValidas(const unsigned int fil, const unsigned int j) const;
+	unsigned int IndiceParaPosiciones(const unsigned int i, const unsigned int j) const;
 
 private:
-	unsigned int IndiceParaPosiciones(const unsigned int i, const unsigned int j) const;
 	void GaussMultiplicarFila(unsigned int fila, float escalar);
 	void GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar);
 
 	unsigned int filas, columnas;
-	float* datos;
-
-	///
-	void CheckPosicionesValidas(const unsigned int fil, const unsigned int j) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const Matriz& m);
+
 #endif
