@@ -14,7 +14,9 @@ class MatrizStandard : public Matriz
 {
 public:
 	friend MatrizStandard operator+(const Matriz& m1, const Matriz& m2);
+	friend MatrizStandard operator-(const Matriz& m1, const Matriz& m2);
 	friend MatrizStandard operator*(const Matriz& m1, const Matriz& m2);
+	friend MatrizStandard operator*(const float& f, const Matriz& m2);
 	MatrizStandard(const Matriz& m);
 	MatrizStandard(const unsigned int filas, const unsigned int columnas);
 	MatrizStandard(const unsigned int filas, const unsigned int columnas, const float fill);
@@ -35,6 +37,8 @@ private:
 
 
 MatrizStandard operator+(const Matriz& m1, const Matriz& m2);
+MatrizStandard operator-(const Matriz& m1, const Matriz& m2);
 MatrizStandard operator*(const Matriz& m1, const Matriz& m2);
+MatrizStandard operator*(const float& f, const Matriz& m2);
 
 #endif /* SRC_MATRIZSTANDARD_H_ */

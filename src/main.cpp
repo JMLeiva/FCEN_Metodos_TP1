@@ -5,24 +5,68 @@
 void testSum();
 void testMul();
 void testGauss();
+Matriz* generarMatrizGrado(Matriz& w);
 
 int main(int argc, char* argv[])
 {
 	InputLoader inputLoader;
 
-	Matriz* W = inputLoader.Load("../Tests/test_001.txt");
+	std::cout < argv[0];
 
-	std::cout << *W;
+	Matriz* W = inputLoader.Load("Tests/test_001.txt"); // ../
+	Matriz* D = generarMatrizGrado(*W);
+
+	std::cout << *W << std::endl;
+	std::cout << *D << std::endl;
+
+	float p = 0.6;
+
+	MatrizStandard WD = (*W) * (*D);
+
+	MatrizStandard pWD = p * WD;
+
+	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas()) - pWD;
+
+	std::cout << WD << std::endl;
+	std::cout << pWD << std::endl;
+	std::cout << i_pWD << std::endl;
+	std::cout << i_pWD.Escalonada() << std::endl;
+
 	//testSum();
 	//testMul();
 	//testGauss();
 
-
+	delete D;
 	delete W;
 
 	return 0;
 }
 
+Matriz* generarMatrizGrado(Matriz& w)
+{
+	Matriz* result = new MatrizStandard(w.GetCantidadFilas(), w.GetCantidadColumnas(), 0);
+
+	for(unsigned int col = 0; col < w.GetCantidadColumnas(); col++)
+	{
+		float accum = 0;
+
+		for(unsigned int fil = 0; fil < w.GetCantidadFilas(); fil++)
+		{
+			accum += w.Get(fil, col);
+		}
+
+		if(accum == 0)
+		{
+			result->Set(col, col, 0);
+		}
+		else
+		{
+			result->Set(col, col, 1 / accum);
+		}
+	}
+
+	return result;
+}
 
 void testSum()
 {

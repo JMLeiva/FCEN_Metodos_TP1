@@ -48,6 +48,22 @@ void Matriz::Sumar(const Matriz& m1, const Matriz& m2, Matriz* out)
 	}
 }
 
+void Matriz::Restar(const Matriz& m1, const Matriz& m2, Matriz* out)
+{
+	assert(m1.GetCantidadColumnas() == m2.GetCantidadColumnas());
+	assert(m2.GetCantidadFilas() == m2.GetCantidadFilas());
+
+	out->SetTamano(m1.GetCantidadFilas(), m1.GetCantidadColumnas());
+
+	for(unsigned int fil = 0; fil < m1.GetCantidadFilas(); fil++)
+	{
+		for(unsigned int col = 0; col < m1.GetCantidadColumnas(); col++)
+		{
+			out->Set(fil, col, m1.Get(fil, col) - m2.Get(fil, col));
+		}
+	}
+}
+
 void Matriz::Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out)
 {
 	assert(m1.GetCantidadColumnas() == m2.GetCantidadFilas());
@@ -57,7 +73,7 @@ void Matriz::Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out)
 	{
 		for(unsigned int col = 0; col < m2.GetCantidadColumnas(); col++)
 		{
-			int accum = 0;
+			float accum = 0;
 
 			for(unsigned int i = 0; i < m1.GetCantidadColumnas(); i++)
 			{
@@ -65,6 +81,19 @@ void Matriz::Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out)
 			}
 
 			out->Set(fil, col, accum);
+		}
+	}
+}
+
+void Matriz::Multiplicar(const float& f, const Matriz& m, Matriz* out)
+{
+	out->SetTamano(m.GetCantidadFilas(), m.GetCantidadColumnas());
+
+	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	{
+		for(unsigned int col = 0; col < m.GetCantidadColumnas(); col++)
+		{
+			out->Set(fil, col, m.Get(fil, col) *  f);
 		}
 	}
 }
