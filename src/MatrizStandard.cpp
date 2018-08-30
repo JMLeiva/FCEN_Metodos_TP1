@@ -96,11 +96,29 @@ MatrizStandard operator+(const Matriz& m1, const Matriz& m2)
 	return result;
 }
 
+MatrizStandard operator-(const Matriz& m1, const Matriz& m2)
+{
+	MatrizStandard result = MatrizStandard();
+
+	Matriz::Restar(m1, m2, &result);
+
+	return result;
+}
+
 MatrizStandard operator*(const Matriz& m1, const Matriz& m2)
 {
 	MatrizStandard result = MatrizStandard();
 
 	Matriz::Multiplicar(m1, m2, &result);
+
+	return result;
+}
+
+MatrizStandard operator*(const float& f, const Matriz& m2)
+{
+	MatrizStandard result = MatrizStandard();
+
+	Matriz::Multiplicar(f, m2, &result);
 
 	return result;
 }

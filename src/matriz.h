@@ -17,7 +17,9 @@ public:
 	virtual float Get(const unsigned int fil, const unsigned int col) const= 0;
 	Matriz& Escalonada();
 	static void Sumar(const Matriz& m1, const Matriz& m2, Matriz* out);
+	static void Restar(const Matriz& m1, const Matriz& m2, Matriz* out);
 	static void Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out);
+	static void Multiplicar(const float& f, const Matriz& m, Matriz* out);
 
 protected:
 	Matriz();
