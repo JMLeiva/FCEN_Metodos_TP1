@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "../MatrizRala.h"
-#include "../matriz.h"
+#include "../Matriz.h"
 
 using namespace std;
 

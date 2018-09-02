@@ -3,17 +3,20 @@
 #include <assert.h>
 #include <iomanip>
 
-MatrizStandard::MatrizStandard()
+MatrizStandard::MatrizStandard() : Matriz()
 {
 	this->datos = NULL;
 }
 
 
-MatrizStandard::MatrizStandard(const Matriz& m) : Matriz(m)
+void MatrizStandard::Copy(const Matriz& m)
 {
-	unsigned int size = m.GetCantidadFilas() * m.GetCantidadColumnas();
+	if(this->datos != NULL)
+	{
+		delete this->datos;
+	}
 
-	this->datos = new float[size];
+	SetTamano(m.GetCantidadFilas(), m.GetCantidadColumnas());
 
 	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
@@ -68,6 +71,20 @@ float MatrizStandard::Get(const unsigned int fil, const unsigned int col) const
 	return this->datos[indice];
 }
 
+Matriz* MatrizStandard::Escalonada() const
+{
+	MatrizStandard* result = new MatrizStandard();
+	result->Copy(*this);
+	Matriz::Escalonar(*result);
+	return result;
+}
+
+Matriz* MatrizStandard::Extendida(const Vector& v) const
+{
+	MatrizStandard* result = new MatrizStandard(this->GetCantidadFilas(), this->GetCantidadColumnas()+1);
+	Matriz::Extender(*this, v, *result);
+	return result;
+}
 
 void MatrizStandard::SetTamano(const unsigned int filas, const unsigned int columnas)
 {
@@ -84,7 +101,10 @@ void MatrizStandard::SetTamano(const unsigned int filas, const unsigned int colu
 
 MatrizStandard::~MatrizStandard()
 {
-	delete[] datos;
+	if(this->datos != NULL)
+	{
+		delete [] datos;
+	}
 }
 
 MatrizStandard operator+(const Matriz& m1, const Matriz& m2)

@@ -8,7 +8,7 @@
 #ifndef INPUTLOADER_H_
 #define INPUTLOADER_H_
 
-#include "../matriz.h"
+#include "../Matriz.h"
 
 
 class InputLoader {
