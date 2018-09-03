@@ -4,12 +4,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/helpers/Console.cpp \
 ../src/helpers/IOHelper.cpp 
 
 OBJS += \
+./src/helpers/Console.o \
 ./src/helpers/IOHelper.o 
 
 CPP_DEPS += \
+./src/helpers/Console.d \
 ./src/helpers/IOHelper.d 
 
 

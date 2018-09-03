@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 
+#include "helpers/Console.h"
 #include "helpers/IOHelper.h"
 #include "MatrizStandard.h"
 
@@ -18,35 +19,46 @@ int main(int argc, char* argv[])
 	char* inputPath = argv[1];
 	float p = std::stof(argv[2]);
 
+	Console::Out() << "Leyendo archivo..." << std::endl;
+
 	Matriz* W = IO::Load(inputPath); // ../
+
+	Console::Out() << "Generando Grado..." << std::endl;
+
 	Matriz* D = generarMatrizGrado(*W);
-	Vector* z = generarVectorZ(*D);
+
+	Console::Out() << "Generando e..." << std::endl;
+
 	Vector* e = new Vector(D->GetCantidadFilas(), 1);
 
-	std::cout << *W << std::endl;
-	std::cout << *D << std::endl;
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
+	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
 
 
-
+	Console::Out() << "Calculando WD..." << std::endl;
 	MatrizStandard WD = (*W) * (*D);
+
+	Console::Out() << "Calculando pWD..." << std::endl;
 
 	MatrizStandard pWD = p * WD;
 
+	Console::Out() << "Calculando I - pWD..." << std::endl;
 	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas()) - pWD;
 
+	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
 	Vector solucion = i_pWD.ResolverSistema(*e);
 
 	//Matriz* i_pWD_escalonada = i_pWD.Escalonada();
 
-	std::cout << WD << std::endl;
-	std::cout << pWD << std::endl;
-	std::cout << i_pWD << std::endl;
+	Console::Debug() << WD << std::endl; // @suppress("Invalid overload")
+	Console::Debug() << pWD << std::endl; // @suppress("Invalid overload")
+	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
 	//std::cout << i_pWD_escalonada << std::endl;
-	std::cout << solucion << std::endl;
+	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
 	solucion.Normalizar();
 
-	std::cout << solucion << std::endl;
+	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
 	std::string outPath(inputPath);
 	outPath += ".out";
@@ -59,7 +71,6 @@ int main(int argc, char* argv[])
 	//testSolucion();
 
 	delete e;
-	delete z;
 	delete D;
 	delete W;
 	//delete i_pWD_escalonada;
