@@ -1,6 +1,6 @@
-#include "matriz.h"
 #include <assert.h>
 #include <iomanip>
+#include "Matriz.h"
 
 
 Matriz::Matriz()
@@ -9,11 +9,6 @@ Matriz::Matriz()
 	this->columnas = 0;
 }
 
-Matriz::Matriz(const Matriz& m)
-{
-	this->filas = m.GetCantidadFilas();
-	this->columnas = m.GetCantidadColumnas();
-}
 
 Matriz::Matriz(const unsigned int filas, const unsigned int columnas)
 {
@@ -98,31 +93,75 @@ void Matriz::Multiplicar(const float& f, const Matriz& m, Matriz* out)
 	}
 }
 
-
-Matriz& Matriz::Escalonada()
+void Matriz::Extender(const Matriz& m, const Vector& v, Matriz& out)
 {
+	assert(v.GetTamano() == m.GetCantidadFilas());
+	assert(out.GetCantidadFilas() == m.GetCantidadFilas());
+	assert(out.GetCantidadColumnas() == m.GetCantidadColumnas()+1);
+
+	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	{
+		for(unsigned int col = 0; col < m.GetCantidadColumnas(); col++)
+		{
+			out.Set(fil, col, m.Get(fil, col));
+		}
+
+		out.Set(fil, out.GetCantidadColumnas()-1, v.Get(fil));
+	}
+}
+
+
+void Matriz::Escalonar(Matriz& m)
+{
+	if(m.EstaEscalonada())
+	{
+		return;
+	}
+
 	// Eliminacion Gaussiana
 	unsigned int currentCol = 0;
 
-	for(unsigned int currentFil = 0; currentFil < this->GetCantidadFilas() && currentCol < this->GetCantidadColumnas() - 1; currentFil++)
+	for(unsigned int currentFil = 0; currentFil < m.GetCantidadFilas() && currentCol < m.GetCantidadColumnas() - 1; currentFil++)
 	{
-		for(unsigned int fil = currentFil+1; fil < this->GetCantidadFilas(); fil++)
+		for(unsigned int fil = currentFil+1; fil < m.GetCantidadFilas(); fil++)
 		{
-			float srcVal = (this->Get(currentFil, currentCol));
-			float dstVal = -(this->Get(fil, currentCol));
+			float srcVal = (m.Get(currentFil, currentCol));
+			float dstVal = -(m.Get(fil, currentCol));
 
 			float escalar = dstVal / srcVal;
-			this->GaussSumarMultiplo(currentFil, fil, escalar);
+			m.GaussSumarMultiplo(currentFil, fil, escalar);
 
 			std::cout << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;
-			std::cout << *this << std::endl;
+			std::cout << m << std::endl;
 		}
 
 		currentCol++;
 	}
+}
 
+bool Matriz::EstaEscalonada() const
+{
+	unsigned int currentCol = 0;
 
-	return *this;
+	for(unsigned int currentFil = 0; currentFil < this->GetCantidadFilas() && currentCol < this->GetCantidadColumnas() - 1; currentFil++)
+	{
+		// Busco primer valor no nulo de la fila
+		for(unsigned int col = 0; col < this->GetCantidadColumnas(); col++)
+		{
+			if(this->Get(currentFil, col) != 0)
+			{
+				if(col < currentCol)
+				{
+					return false;
+				}
+
+				currentCol = col+1;
+				break;
+			}
+		}
+	}
+
+	return true;
 }
 
 void Matriz::GaussMultiplicarFila(unsigned int fila, float escalar)
@@ -164,6 +203,52 @@ unsigned int Matriz::GetCantidadColumnas() const
 	return columnas;
 }
 
+
+Vector Matriz::ResolverSistema(const Vector& v) const
+{
+	assert(v.GetTamano() == GetCantidadFilas());
+
+	Matriz* extendida = this->Extendida(v);
+	Matriz* escalonada = extendida->Escalonada();
+
+	Vector solucion(v.GetTamano(), 0);
+
+	unsigned int colIndex = escalonada->GetCantidadColumnas() - 1;
+	unsigned int filIndex = v.GetTamano()-1;
+
+	while(colIndex > 0)
+	{
+		float accum = escalonada->Get(filIndex, escalonada->GetCantidadColumnas()-1);
+
+		unsigned int col = colIndex;
+		unsigned int solIndex = filIndex+1;
+
+		while(col < escalonada->GetCantidadColumnas() - 1)
+		{
+			float mVal = escalonada->Get(filIndex, col);
+			float solVal = solucion.Get(solIndex);
+			accum -= mVal * solVal;
+
+			col++;
+			solIndex++;
+		}
+
+		float m_VAL_TEST =  escalonada->Get(filIndex, colIndex-1);
+
+		float posResult = accum / escalonada->Get(filIndex, colIndex-1);
+
+		solucion.Set(filIndex, posResult);
+
+
+		filIndex--;
+		colIndex--;
+	}
+
+	delete extendida;
+	delete escalonada;
+
+	return solucion;
+}
 
 void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int col) const
 {

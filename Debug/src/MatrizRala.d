@@ -1,8 +1,10 @@
 src/MatrizRala.o: ../src/MatrizRala.cpp ../src/MatrizRala.h \
- ../src/matriz.h ../src/MatrizStandard.h
+ ../src/MatrizStandard.h ../src/Matriz.h ../src/Vector.h
 
 ../src/MatrizRala.h:
 
-../src/matriz.h:
-
 ../src/MatrizStandard.h:
+
+../src/Matriz.h:
+
+../src/Vector.h:

@@ -4,22 +4,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Matriz.cpp \
 ../src/MatrizRala.cpp \
 ../src/MatrizStandard.cpp \
-../src/main.cpp \
-../src/matriz.cpp 
+../src/Vector.cpp \
+../src/main.cpp 
 
 OBJS += \
+./src/Matriz.o \
 ./src/MatrizRala.o \
 ./src/MatrizStandard.o \
-./src/main.o \
-./src/matriz.o 
+./src/Vector.o \
+./src/main.o 
 
 CPP_DEPS += \
+./src/Matriz.d \
 ./src/MatrizRala.d \
 ./src/MatrizStandard.d \
-./src/main.d \
-./src/matriz.d 
+./src/Vector.d \
+./src/main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

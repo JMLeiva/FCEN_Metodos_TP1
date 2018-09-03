@@ -14,7 +14,6 @@ MatrizRala::MatrizRala(const unsigned int filas, const unsigned int columnas) : 
 
 }
 
-
 void MatrizRala::Set(const unsigned int fil, const unsigned int col, float val)
 {
 	Matriz::CheckPosicionesValidas(fil, col);
@@ -36,6 +35,20 @@ void MatrizRala::SetTamano(const unsigned int filas, const unsigned int columnas
 	datos.clear();
 }
 
+
+Matriz* MatrizRala::Escalonada() const
+{
+	//  Todo esto no se puede hacer bien aca!
+	assert(false);
+	return NULL;
+}
+
+Matriz* MatrizRala::Extendida(const Vector& v) const
+{
+	//  Todo esto no se puede hacer bien aca!
+	assert(false);
+	return NULL;
+}
 
 MatrizRala::~MatrizRala()
 {

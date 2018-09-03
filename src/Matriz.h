@@ -1,25 +1,31 @@
 #ifndef MATRIZ_H_
 #define MATRIZ_H_
 
+#include "Vector.h"
 #include <iostream>
 
 class Matriz
 {
 public:
-	Matriz(const Matriz& m);
 	Matriz(const unsigned int filas, const unsigned int columnas);
 	virtual ~Matriz();
-
 
 	unsigned int GetCantidadFilas() const;
 	unsigned int GetCantidadColumnas() const;
 	virtual void Set(const unsigned int fil, const unsigned int col, const float val) = 0;
 	virtual float Get(const unsigned int fil, const unsigned int col) const= 0;
-	Matriz& Escalonada();
+	virtual Matriz* Escalonada() const = 0;
+	virtual Matriz* Extendida(const Vector& v) const = 0;
+	bool EstaEscalonada() const;
+	Vector ResolverSistema(const Vector& v) const;
+
+
 	static void Sumar(const Matriz& m1, const Matriz& m2, Matriz* out);
 	static void Restar(const Matriz& m1, const Matriz& m2, Matriz* out);
 	static void Multiplicar(const Matriz& m1, const Matriz& m2, Matriz* out);
 	static void Multiplicar(const float& f, const Matriz& m, Matriz* out);
+	static void Escalonar(Matriz& m);
+	static void Extender(const Matriz& m, const Vector& v, Matriz& out);
 
 protected:
 	Matriz();
