@@ -9,13 +9,12 @@
 #define INPUTLOADER_H_
 
 #include "../Matriz.h"
+#include "../Vector.h"
 
-
-class InputLoader {
-public:
-	InputLoader();
+namespace IO
+{
 	Matriz* Load(const char* path);
-	virtual ~InputLoader();
-};
+	void Save(const char* path, const float& p, const Vector& solucion);
+}
 
 #endif /* INPUTLOADER_H_ */
