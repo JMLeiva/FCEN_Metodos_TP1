@@ -1,5 +1,9 @@
 #include <iostream>
-#include "helpers/InputLoader.h"
+#include <stdlib.h>
+#include <string>
+#include <stdio.h>
+
+#include "helpers/IOHelper.h"
 #include "MatrizStandard.h"
 
 void testSum();
@@ -11,10 +15,10 @@ Vector* generarVectorZ(const Matriz& D);
 
 int main(int argc, char* argv[])
 {
-	InputLoader inputLoader;
+	char* inputPath = argv[1];
+	float p = std::stof(argv[2]);
 
-
-	Matriz* W = inputLoader.Load("Tests/test_completo.txt"); // ../
+	Matriz* W = IO::Load(inputPath); // ../
 	Matriz* D = generarMatrizGrado(*W);
 	Vector* z = generarVectorZ(*D);
 	Vector* e = new Vector(D->GetCantidadFilas(), 1);
@@ -22,7 +26,7 @@ int main(int argc, char* argv[])
 	std::cout << *W << std::endl;
 	std::cout << *D << std::endl;
 
-	float p = 0.5;
+
 
 	MatrizStandard WD = (*W) * (*D);
 
@@ -43,6 +47,11 @@ int main(int argc, char* argv[])
 	solucion.Normalizar();
 
 	std::cout << solucion << std::endl;
+
+	std::string outPath(inputPath);
+	outPath += ".out";
+
+	IO::Save(outPath.c_str(), p, solucion);
 
 	//testSum();
 	//testMul();
