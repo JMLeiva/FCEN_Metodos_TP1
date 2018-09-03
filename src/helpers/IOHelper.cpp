@@ -6,12 +6,15 @@
  */
 
 #include "IOHelper.h"
-#include <iostream>
-#include <fstream>
 #include "../MatrizRala.h"
 #include "../Matriz.h"
+#include "Console.h";
 
-using namespace std;
+#include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+#include <fstream>
+
 
 namespace IO
 {
@@ -23,20 +26,20 @@ namespace IO
 
 		if(!file.fail())
 		{
-			cout << "OPENED" << endl;
+			Console::Debug() << "File " << path << " Opened" << std::endl; // @suppress("Invalid overload")
 		}
 		else
 		{
-			cout << "NOT OPENED" << endl;
+			Console::Debug() << "File " << path << " Not opened" << std::endl; // @suppress("Invalid overload")
 		}
 
 		unsigned int numeroDePaginas;
 		file >> numeroDePaginas;
-		cout << "Numero de paginas: " << numeroDePaginas << endl;
+		Console::Debug() << "Numero de paginas: " << numeroDePaginas << std::endl; // @suppress("Invalid overload")
 
 		unsigned int numeroDeLinks;
 		file >> numeroDeLinks;
-		cout << "Numero de links: " << numeroDeLinks << endl;
+		Console::Debug() << "Numero de links: " << numeroDeLinks << std::endl; // @suppress("Invalid overload")
 
 		Matriz* matriz = new MatrizRala(numeroDePaginas, numeroDePaginas);
 
@@ -46,7 +49,7 @@ namespace IO
 
 			file >> i >> j;
 
-			cout << i << " " << j << endl;
+			Console::Debug() << i << " " << j << std::endl; // @suppress("Invalid overload")
 
 			matriz->Set(j-1, i-1, 1);
 		}

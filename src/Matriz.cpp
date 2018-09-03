@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <iomanip>
 #include "Matriz.h"
-
+#include "helpers/Console.h"
 
 Matriz::Matriz()
 {
@@ -131,8 +131,9 @@ void Matriz::Escalonar(Matriz& m)
 			float escalar = dstVal / srcVal;
 			m.GaussSumarMultiplo(currentFil, fil, escalar);
 
-			std::cout << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;
-			std::cout << m << std::endl;
+
+			Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
+			Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
 		}
 
 		currentCol++;
@@ -232,8 +233,6 @@ Vector Matriz::ResolverSistema(const Vector& v) const
 			col++;
 			solIndex++;
 		}
-
-		float m_VAL_TEST =  escalonada->Get(filIndex, colIndex-1);
 
 		float posResult = accum / escalonada->Get(filIndex, colIndex-1);
 
