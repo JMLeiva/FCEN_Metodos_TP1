@@ -8,12 +8,12 @@
 #ifndef INPUTLOADER_H_
 #define INPUTLOADER_H_
 
-#include "../Matriz.h"
+#include "../MatrizRala.h"
 #include "../Vector.h"
 
 namespace IO
 {
-	Matriz* Load(const char* path);
+	MatrizRala* Load(const char* path);
 	void Save(const char* path, const float& p, const Vector& solucion);
 }
 

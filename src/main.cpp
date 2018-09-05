@@ -6,6 +6,7 @@
 #include "helpers/Console.h"
 #include "helpers/IOHelper.h"
 #include "MatrizStandard.h"
+#include "MatrizRala.h"
 
 void testSum();
 void testMul();
@@ -21,39 +22,35 @@ int main(int argc, char* argv[])
 
 	Console::Out() << "Leyendo archivo..." << std::endl;
 
-	Matriz* W = IO::Load(inputPath); // ../
+	MatrizRala* W = IO::Load(inputPath); // ../
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando Grado..." << std::endl;
 
-	Matriz* D = generarMatrizGrado(*W);
+	Matriz* D = W->CalcularGradoOptimizado();//generarMatrizGrado(*W);
+	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando e..." << std::endl;
 
 	Vector* e = new Vector(D->GetCantidadFilas(), 1);
 
-	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
-	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
-
 
 	Console::Out() << "Calculando WD..." << std::endl;
+
 	MatrizStandard WD = (*W) * (*D);
+	Console::Debug() << WD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Calculando pWD..." << std::endl;
 
 	MatrizStandard pWD = p * WD;
+	Console::Debug() << pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Calculando I - pWD..." << std::endl;
 	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas()) - pWD;
+	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
 	Vector solucion = i_pWD.ResolverSistema(*e);
-
-	//Matriz* i_pWD_escalonada = i_pWD.Escalonada();
-
-	Console::Debug() << WD << std::endl; // @suppress("Invalid overload")
-	Console::Debug() << pWD << std::endl; // @suppress("Invalid overload")
-	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
-	//std::cout << i_pWD_escalonada << std::endl;
 	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
 	solucion.Normalizar();
@@ -69,7 +66,6 @@ int main(int argc, char* argv[])
 	//testMul();
 	//testGauss();
 	//testSolucion();
-
 	delete e;
 	delete D;
 	delete W;

@@ -121,22 +121,25 @@ void Matriz::Escalonar(Matriz& m)
 	// Eliminacion Gaussiana
 	unsigned int currentCol = 0;
 
+
 	for(unsigned int currentFil = 0; currentFil < m.GetCantidadFilas() && currentCol < m.GetCantidadColumnas() - 1; currentFil++)
 	{
+		Console::Out() << currentFil << " / " << m.GetCantidadFilas() << std::endl;
+
 		for(unsigned int fil = currentFil+1; fil < m.GetCantidadFilas(); fil++)
 		{
 			float srcVal = (m.Get(currentFil, currentCol));
 			float dstVal = -(m.Get(fil, currentCol));
 
 			float escalar = dstVal / srcVal;
-			m.GaussSumarMultiplo(currentFil, fil, escalar);
+			m.GaussSumarMultiplo(currentFil, fil, escalar, currentFil);
 
-
-			Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
-			Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
 		}
 
 		currentCol++;
+
 	}
 }
 
@@ -173,25 +176,18 @@ void Matriz::GaussMultiplicarFila(unsigned int fila, float escalar)
 	}
 }
 
-void Matriz::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar)
+void Matriz::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar, unsigned int offset)
 {
-	assert(filaSrc < this->GetCantidadFilas());
-	assert(filaDst < this->GetCantidadFilas());
+	//assert(filaSrc < this->GetCantidadFilas());
+	//assert(filaDst < this->GetCantidadFilas());
 
-	for(unsigned int col = 0; col < this->GetCantidadColumnas(); col++)
+	for(unsigned int col = offset; col < this->GetCantidadColumnas(); col++)
 	{
 		float srcVal = this->Get(filaSrc, col);
 		float dstval = this->Get(filaDst, col);
 		float result = dstval + srcVal * escalar;
 		this->Set(filaDst, col, result);
 	}
-}
-
-unsigned int Matriz::IndiceParaPosiciones(const unsigned int fil, const unsigned int col) const
-{
-	CheckPosicionesValidas(fil, col);
-
-	return fil * columnas + col;
 }
 
 unsigned int Matriz::GetCantidadFilas() const
@@ -216,6 +212,8 @@ Vector Matriz::ResolverSistema(const Vector& v) const
 
 	unsigned int colIndex = escalonada->GetCantidadColumnas() - 1;
 	unsigned int filIndex = v.GetTamano()-1;
+
+
 
 	while(colIndex > 0)
 	{
@@ -251,13 +249,13 @@ Vector Matriz::ResolverSistema(const Vector& v) const
 
 void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int col) const
 {
-	assert(fil < filas);
-	assert(col < columnas);
+	//assert(fil < filas);
+	//assert(col < columnas);
 }
 
 std::ostream& operator<<(std::ostream& os, const Matriz& m)
 {
-	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	/*for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
 		os << "| ";
 
@@ -267,7 +265,7 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 		}
 
 		os << "     |" << std::endl;
-	}
+	}*/
 
     return os;
 }

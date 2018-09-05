@@ -9,6 +9,7 @@
 #define SRC_MATRIZRALA_H_
 
 #include "MatrizStandard.h"
+#include <map>
 #include <set>
 #include "Matriz.h"
 
@@ -22,13 +23,18 @@ public:
 	virtual Matriz* Escalonada() const;
 	virtual Matriz* Extendida(const Vector& v) const;
 
+	virtual MatrizStandard operator*(const Matriz& m2);
+	MatrizStandard* CalcularGradoOptimizado();
+
 	virtual ~MatrizRala();
 protected:
 	MatrizRala();
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
 
 private:
-	std::set<unsigned int> datos;
+	std::map<unsigned int, std::set<unsigned int> > datos;
+	unsigned int* tamano_columna;
 };
+
 
 #endif /* SRC_MATRIZRALA_H_ */
