@@ -123,6 +123,8 @@ void Matriz::Escalonar(Matriz& m)
 
 	for(unsigned int currentFil = 0; currentFil < m.GetCantidadFilas() && currentCol < m.GetCantidadColumnas() - 1; currentFil++)
 	{
+		Console::Out() << currentFil << " / " << m.GetCantidadFilas() << std::endl;
+
 		for(unsigned int fil = currentFil+1; fil < m.GetCantidadFilas(); fil++)
 		{
 			float srcVal = (m.Get(currentFil, currentCol));
@@ -131,9 +133,8 @@ void Matriz::Escalonar(Matriz& m)
 			float escalar = dstVal / srcVal;
 			m.GaussSumarMultiplo(currentFil, fil, escalar);
 
-
-			Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
-			Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
 		}
 
 		currentCol++;
@@ -257,7 +258,7 @@ void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int c
 
 std::ostream& operator<<(std::ostream& os, const Matriz& m)
 {
-	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	/*for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
 		os << "| ";
 
@@ -267,7 +268,7 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 		}
 
 		os << "     |" << std::endl;
-	}
+	}*/
 
     return os;
 }

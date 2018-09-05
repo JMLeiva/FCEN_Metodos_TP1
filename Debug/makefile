@@ -45,7 +45,7 @@ all: MetodosTP1
 MetodosTP1: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "MetodosTP1" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -p -pg -o "MetodosTP1" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

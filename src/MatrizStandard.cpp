@@ -107,6 +107,15 @@ MatrizStandard::~MatrizStandard()
 	}
 }
 
+MatrizStandard MatrizStandard::operator*(const Matriz& m2)
+{
+	MatrizStandard result = MatrizStandard();
+
+	Matriz::Multiplicar(*this, m2, &result);
+
+	return result;
+}
+
 MatrizStandard operator+(const Matriz& m1, const Matriz& m2)
 {
 	MatrizStandard result = MatrizStandard();
@@ -121,15 +130,6 @@ MatrizStandard operator-(const Matriz& m1, const Matriz& m2)
 	MatrizStandard result = MatrizStandard();
 
 	Matriz::Restar(m1, m2, &result);
-
-	return result;
-}
-
-MatrizStandard operator*(const Matriz& m1, const Matriz& m2)
-{
-	MatrizStandard result = MatrizStandard();
-
-	Matriz::Multiplicar(m1, m2, &result);
 
 	return result;
 }

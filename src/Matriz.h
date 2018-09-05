@@ -4,6 +4,8 @@
 #include "Vector.h"
 #include <iostream>
 
+class MatrizStandard;
+
 class Matriz
 {
 public:
@@ -18,7 +20,7 @@ public:
 	virtual Matriz* Extendida(const Vector& v) const = 0;
 	bool EstaEscalonada() const;
 	Vector ResolverSistema(const Vector& v) const;
-
+	virtual MatrizStandard operator*(const Matriz& m2) =0;
 
 	static void Sumar(const Matriz& m1, const Matriz& m2, Matriz* out);
 	static void Restar(const Matriz& m1, const Matriz& m2, Matriz* out);
