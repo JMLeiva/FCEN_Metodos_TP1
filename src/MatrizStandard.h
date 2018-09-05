@@ -37,7 +37,7 @@ protected:
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
 
 private:
-	float* datos;
+	float** datos;
 };
 
 

@@ -34,11 +34,10 @@ protected:
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
 
 	void CheckPosicionesValidas(const unsigned int fil, const unsigned int j) const;
-	unsigned int IndiceParaPosiciones(const unsigned int i, const unsigned int j) const;
 
 private:
 	void GaussMultiplicarFila(unsigned int fila, float escalar);
-	void GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar);
+	void GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar, unsigned int offset);
 
 	unsigned int filas, columnas;
 };

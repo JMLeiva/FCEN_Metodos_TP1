@@ -118,7 +118,7 @@ MatrizStandard MatrizRala::operator*(const Matriz& m2)
 
 MatrizStandard* MatrizRala::CalcularGradoOptimizado()
 {
-	MatrizStandard* result = new MatrizStandard(GetCantidadFilas(), GetCantidadColumnas());
+	MatrizStandard* result = new MatrizStandard(GetCantidadFilas(), GetCantidadColumnas(), 0);
 
 	for (unsigned int i = 0; i < GetCantidadColumnas(); i++)
 	{

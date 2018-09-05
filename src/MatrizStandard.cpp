@@ -29,16 +29,29 @@ void MatrizStandard::Copy(const Matriz& m)
 
 MatrizStandard::MatrizStandard(const unsigned int filas, const unsigned int columnas) : Matriz(filas, columnas)
 {
-	this->datos = new float[GetCantidadFilas() * GetCantidadColumnas()];
+	this->datos = new float*[GetCantidadFilas()];
+
+	for(unsigned int i = 0; i < GetCantidadFilas(); i++)
+	{
+		this->datos[i] = new float[GetCantidadColumnas()];
+	}
 }
 
 MatrizStandard::MatrizStandard(const unsigned int filas, const unsigned int columnas, const float fill) : Matriz(filas, columnas)
 {
-	this->datos = new float[GetCantidadFilas() * GetCantidadColumnas()];
+	this->datos = new float*[GetCantidadFilas()];
 
-	for(unsigned int i = 0; i < GetCantidadFilas() * GetCantidadColumnas(); i++)
+	for(unsigned int i = 0; i < GetCantidadFilas(); i++)
 	{
-		this->datos[i] = fill;
+		this->datos[i] = new float[GetCantidadColumnas()];
+	}
+
+	for(unsigned int f = 0; f < GetCantidadFilas(); f++)
+	{
+		for(unsigned int c = 0; c <  GetCantidadColumnas(); c++)
+		{
+			this->datos[f][c] = fill;
+		}
 	}
 }
 
@@ -56,19 +69,14 @@ MatrizStandard MatrizStandard::Identidad(unsigned int tam)
 
 void MatrizStandard::Set(const unsigned int fil, const unsigned int col, const float val)
 {
-	Matriz::CheckPosicionesValidas(fil, col);
-
-	unsigned int indice = this->IndiceParaPosiciones(fil, col);
-
-	this->datos[indice] = val;
+	CheckPosicionesValidas(fil, col);
+	this->datos[fil][col] = val;
 }
 
 float MatrizStandard::Get(const unsigned int fil, const unsigned int col) const
 {
 	CheckPosicionesValidas(fil, col);
-
-	unsigned int indice = this->IndiceParaPosiciones(fil, col);
-	return this->datos[indice];
+	return this->datos[fil][col];
 }
 
 Matriz* MatrizStandard::Escalonada() const
@@ -92,17 +100,31 @@ void MatrizStandard::SetTamano(const unsigned int filas, const unsigned int colu
 
 	if(this->datos != NULL)
 	{
+		for(unsigned int i = 0; i < GetCantidadFilas(); i++)
+		{
+			delete this->datos[i];
+		}
+
 		delete [] datos;
 	}
 
-	unsigned int size = this->GetCantidadFilas() * this->GetCantidadColumnas();
-	this->datos = new float[size];
+	this->datos = new float*[GetCantidadFilas()];
+
+	for(unsigned int i = 0; i < GetCantidadFilas(); i++)
+	{
+		this->datos[i] = new float[GetCantidadColumnas()];
+	}
 }
 
 MatrizStandard::~MatrizStandard()
 {
 	if(this->datos != NULL)
 	{
+		for(unsigned int i = 0; i < GetCantidadFilas(); i++)
+		{
+			delete this->datos[i];
+		}
+
 		delete [] datos;
 	}
 }

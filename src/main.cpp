@@ -18,7 +18,7 @@ Vector* generarVectorZ(const Matriz& D);
 int main(int argc, char* argv[])
 {
 	char* inputPath = argv[1];
-	float p = 0.85;//std::stof(argv[2]);
+	float p = std::stof(argv[2]);
 
 	Console::Out() << "Leyendo archivo..." << std::endl;
 
@@ -50,7 +50,6 @@ int main(int argc, char* argv[])
 	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
-
 	Vector solucion = i_pWD.ResolverSistema(*e);
 	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
@@ -67,7 +66,6 @@ int main(int argc, char* argv[])
 	//testMul();
 	//testGauss();
 	//testSolucion();
-
 	delete e;
 	delete D;
 	delete W;
