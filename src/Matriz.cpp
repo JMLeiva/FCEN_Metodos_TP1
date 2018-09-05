@@ -121,7 +121,6 @@ void Matriz::Escalonar(Matriz& m)
 	// Eliminacion Gaussiana
 	unsigned int currentCol = 0;
 
-	int temp = 0;
 
 	for(unsigned int currentFil = 0; currentFil < m.GetCantidadFilas() && currentCol < m.GetCantidadColumnas() - 1; currentFil++)
 	{
@@ -141,12 +140,6 @@ void Matriz::Escalonar(Matriz& m)
 
 		currentCol++;
 
-		temp++;
-
-		if(temp >= 250)
-		{
-			break;
-		}
 	}
 }
 
