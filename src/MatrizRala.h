@@ -7,7 +7,7 @@
 
 #ifndef SRC_MATRIZRALA_H_
 #define SRC_MATRIZRALA_H_
-
+/*
 #include "MatrizStandard.h"
 #include <map>
 #include <set>
@@ -35,6 +35,6 @@ private:
 	std::map<unsigned int, std::set<unsigned int> > datos;
 	unsigned int* tamano_columna;
 };
-
+*/
 
 #endif /* SRC_MATRIZRALA_H_ */

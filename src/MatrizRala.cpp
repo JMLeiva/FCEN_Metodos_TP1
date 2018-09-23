@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "helpers/Console.h"
 
+/*
 MatrizRala::MatrizRala()
 {
 	tamano_columna = NULL;
@@ -143,5 +144,5 @@ MatrizRala::~MatrizRala()
 	{
 		delete [] tamano_columna;
 	}
-}
+}*/
 
