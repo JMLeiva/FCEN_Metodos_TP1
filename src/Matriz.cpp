@@ -255,7 +255,7 @@ void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int c
 
 std::ostream& operator<<(std::ostream& os, const Matriz& m)
 {
-	/*for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
 		os << "| ";
 
@@ -265,7 +265,7 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 		}
 
 		os << "     |" << std::endl;
-	}*/
+	}
 
     return os;
 }
