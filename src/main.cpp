@@ -6,7 +6,6 @@
 #include "helpers/Console.h"
 #include "helpers/IOHelper.h"
 #include "MatrizStandard.h"
-#include "MatrizRala.h"
 
 void testSum();
 void testMul();
@@ -22,12 +21,12 @@ int main(int argc, char* argv[])
 
 	Console::Out() << "Leyendo archivo..." << std::endl;
 
-	MatrizRala* W = IO::Load(inputPath); // ../
+	MatrizStandard* W = IO::Load(inputPath); // ../
 	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando Grado..." << std::endl;
 
-	Matriz* D = W->CalcularGradoOptimizado();//generarMatrizGrado(*W);
+	Matriz* D = generarMatrizGrado(*W);
 	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando e..." << std::endl;
@@ -37,16 +36,18 @@ int main(int argc, char* argv[])
 
 	Console::Out() << "Calculando WD..." << std::endl;
 
-	MatrizStandard WD = (*W) * (*D);
-	Console::Debug() << WD << std::endl; // @suppress("Invalid overload")
+	W->Multiplicar(*D);
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Calculando pWD..." << std::endl;
 
-	MatrizStandard pWD = p * WD;
-	Console::Debug() << pWD << std::endl; // @suppress("Invalid overload")
+	W->Multiplicar(p);
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Calculando I - pWD..." << std::endl;
-	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas()) - pWD;
+	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas());
+	i_pWD.Restar(*W);
+
 	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
@@ -149,7 +150,8 @@ void testSum()
 
 	std::cout << m2 << std::endl;
 
-	std::cout << m1 + m2 << std::endl;
+	m1.Sumar(m2);
+	std::cout << m1 << std::endl;
 }
 
 void testMul()
@@ -172,7 +174,8 @@ void testMul()
 
 	std::cout << m2 << std::endl;
 
-	std::cout << m1 * m2 << std::endl;
+	m1.Multiplicar(m2);
+	std::cout << m1 << std::endl;
 }
 
 void testGauss()
@@ -201,7 +204,9 @@ void testGauss()
 
 	std::cout << m1 << std::endl;
 
-	std::cout << m1.Escalonada() << std::endl;
+	m1.Escalonar();
+
+	std::cout << m1 << std::endl;
 }
 
 
