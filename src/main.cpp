@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 
 	Console::Out() << "Leyendo archivo..." << std::endl;
 
-	MatrizStandard* W = IO::Load(inputPath); // ../
+	Matriz* W = IO::Load(inputPath); // ../
 	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando Grado..." << std::endl;

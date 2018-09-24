@@ -18,7 +18,7 @@
 
 namespace IO
 {
-	MatrizStandard* Load(const char* path)
+	Matriz* Load(const char* path)
 	{
 		std::ifstream file;
 
