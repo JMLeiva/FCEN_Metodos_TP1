@@ -1,4 +1,3 @@
-
 #include "MatrizLIL.h"
 #include <assert.h>
 #include <iomanip>
@@ -11,7 +10,7 @@ MatrizLIL::MatrizLIL(const unsigned int filas, const unsigned int columnas) : Ma
 MatrizLIL MatrizLIL::Identidad(unsigned int tam){
 	MatrizLIL result(tam, tam);
 	for (unsigned int i = 0; i < tam; i++){
-		result.datos[i].push_back(std::make_tuple(i,1));
+		result.Set(i,i,1);
 	}
 	return result;
 }
@@ -26,6 +25,8 @@ void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 			for (int j = datos[fil].size(); j>0; j-- ){ //ordena el valor nuevo
 				if (std::get<0>(datos[fil][j]) < std::get<0>(datos[fil][j-1])){
 					swap(datos[fil][j], datos[fil][j-1]);
+				} else {
+					return;
 				}
 			}
 		}
@@ -34,12 +35,12 @@ void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 
 float MatrizLIL::Get(const unsigned int fil, const unsigned int col) const {
 	CheckPosicionesValidas(fil, col);
-	int i = 0;
-	while (std::get<0>(datos[fil][i]) != col){
-		i++;
+	for (int i = 0; i < datos[fil].size(); i++ ){
+		if (std::get<0>(datos[fil][i]) == col){
+			return std::get<1>(datos[fil][i]);
+		}
 	}
-	return std::get<1>(datos[fil][i]);
-}
+	return 0;
 
 Matriz* MatrizLIL::Copiar() const {
 	Matriz* copy = new MatrizLIL(*this);
