@@ -26,6 +26,7 @@ public:
 	virtual void Multiplicar(const float& f)  =0;
 	virtual void Escalonar() =0;
 	virtual void Extender(const Vector& v)=0;
+	bool EsNulo(const float f) const;
 
 protected:
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
