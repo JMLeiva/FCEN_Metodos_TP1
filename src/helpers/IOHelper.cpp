@@ -6,7 +6,7 @@
  */
 
 #include "IOHelper.h"
-#include "../MatrizStandard.h"
+#include "../MatrizDOK.h"
 #include "../Matriz.h"
 #include "Console.h"
 
@@ -18,7 +18,7 @@
 
 namespace IO
 {
-	MatrizStandard* Load(const char* path)
+	Matriz* Load(const char* path)
 	{
 		std::ifstream file;
 
@@ -41,7 +41,7 @@ namespace IO
 		file >> numeroDeLinks;
 		Console::Debug() << "Numero de links: " << numeroDeLinks << std::endl; // @suppress("Invalid overload")
 
-		MatrizStandard* matriz = new MatrizStandard(numeroDePaginas, numeroDePaginas);
+		Matriz* matriz = new MatrizDOK(numeroDePaginas, numeroDePaginas);
 
 		for(unsigned int link = 0; link < numeroDeLinks; link++)
 		{

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <iomanip>
 #include "helpers/Console.h"
+#include <algorithm>
 
 MatrizStandard::MatrizStandard(const MatrizStandard& m) : Matriz(m.GetCantidadFilas(), m.GetCantidadColumnas())
 {
@@ -87,18 +88,18 @@ void MatrizStandard::SetTamano(const unsigned int filas, const unsigned int colu
 {
 	Matriz::SetTamano(filas, columnas);
 
-	float** newDatos = new float*[GetCantidadFilas()];
+	float** newDatos = new float*[filas];
 
-	for(unsigned int i = 0; i < GetCantidadFilas(); i++)
+	for(unsigned int i = 0; i < filas; i++)
 	{
-		newDatos[i] = new float[GetCantidadColumnas()];
+		newDatos[i] = new float[columnas];
 	}
 
 	if(this->datos != NULL)
 	{
-		for(unsigned int f = 0; f < GetCantidadFilas(); f++)
+		for(unsigned int f = 0; f < std::min(filas, GetCantidadFilas()); f++)
 		{
-			for(unsigned int c = 0; c < GetCantidadColumnas(); c++)
+			for(unsigned int c = 0; c < std::min(columnas, GetCantidadColumnas()); c++)
 			{
 				newDatos[f][c] = this->datos[f][c];
 			}
@@ -152,6 +153,14 @@ void MatrizStandard::Multiplicar(const Matriz& m2)
 
 			for(unsigned int i = 0; i < GetCantidadColumnas(); i++)
 			{
+				float v1 = Get(fil, i);
+				float v2 = m2.Get(i, col);
+
+				if(EsNulo(v1) || EsNulo(v2))
+				{
+					continue;
+				}
+
 				accum += Get(fil, i) * m2.Get(i, col);
 			}
 
@@ -178,11 +187,6 @@ void MatrizStandard::Extender(const Vector& v)
 
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
-		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
-		{
-			Set(fil, col, Get(fil, col));
-		}
-
 		Set(fil, GetCantidadColumnas()-1, v.Get(fil));
 	}
 }

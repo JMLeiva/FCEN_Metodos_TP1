@@ -2,6 +2,9 @@
 #include <iomanip>
 #include "Matriz.h"
 #include "helpers/Console.h"
+#include <cmath>
+
+const float EPSILON = 0.000001;
 
 Matriz::Matriz(const unsigned int filas, const unsigned int columnas)
 {
@@ -116,9 +119,14 @@ void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int c
 	assert(col < columnas);
 }
 
+bool Matriz::EsNulo(const float f) const
+{
+	return fabs(f) < EPSILON;
+}
+
 std::ostream& operator<<(std::ostream& os, const Matriz& m)
 {
-	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	/*for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
 		os << "| ";
 
@@ -128,7 +136,7 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 		}
 
 		os << "     |" << std::endl;
-	}
+	}*/
 
     return os;
 }

@@ -7,6 +7,8 @@
 
 #include "Console.h"
 
+NullStream c;
+
 Console::Console() {
 	// TODO Auto-generated constructor stub
 
@@ -14,7 +16,7 @@ Console::Console() {
 
 std::ostream& Console::Debug()
 {
-	return std::cout;
+	return c;//std::cout;
 }
 
 std::ostream& Console::Out()
