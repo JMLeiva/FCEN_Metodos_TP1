@@ -1,14 +1,14 @@
 
-#include "Lil.h"
+#include "MatrizLIL.h"
 #include <assert.h>
 #include <iomanip>
 #include "helpers/Console.h"
 
-Lil::Lil(const unsigned int filas, const unsigned int columnas) : Matriz(filas,columnas){
+MatrizLIL::MatrizLIL(const unsigned int filas, const unsigned int columnas) : Matriz(filas,columnas){
 	std::vector< std::vector< std::tuple<int,float> > > datos;
 }
 
-void Lil::Set(const unsigned int fil, const unsigned int col, float val){
+void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 	Matriz::CheckPosicionesValidas(fil,col);
 	for(int i = 0; i<datos[fil].size();i++){
 		if(get<0>(datos[fil][i]) == col){
@@ -24,7 +24,7 @@ void Lil::Set(const unsigned int fil, const unsigned int col, float val){
 	}
 }
 
-float Lil::Get(const unsigned int fil, const unsigned int col) const {
+float MatrizLIL::Get(const unsigned int fil, const unsigned int col) const {
 	CheckPosicionesValidas(fil, col);
 	int i = 0;
 	while (get<0>(datos[fil][i]) != col){
@@ -33,20 +33,20 @@ float Lil::Get(const unsigned int fil, const unsigned int col) const {
 	return get<1>(datos[fil][i]);
 }
 
-void Lil::SetTamano(const unsigned int filas, const unsigned int columnas)
+void MatrizLIL::SetTamano(const unsigned int filas, const unsigned int columnas)
 {
 	Matriz::SetTamano(filas, columnas);
 	datos.clear();
 }
 
-MatrizStandard Lil::operator*(const Matriz& m2)
+MatrizStandard MatrizLIL::operator*(const Matriz& m2)
 {
 	assert(GetCantidadColumnas() == m2.GetCantidadFilas());
 
 	MatrizStandard result = MatrizStandard(GetCantidadFilas(), m2.GetCantidadColumnas(), 0);
 
 	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
-		if (datos[i].size() > 0){ //recorro filas de Lil, si es nula la ignoro
+		if (datos[i].size() > 0){ //recorro filas de MatrizLIL, si es nula la ignoro
 			for (unsigned int j = 0; j < m2.GetCantidadColumnas(); j++){ // recorro las columnas donde voy a calcular el valor
 				float accum = 0;
 				for (unsigned int k = 0; k < datos[i].size(); k++){
@@ -60,14 +60,14 @@ MatrizStandard Lil::operator*(const Matriz& m2)
 	return result;
 }
 
-MatrizStandard* Lil::CalcularGradoOptimizado()
+MatrizStandard* MatrizLIL::CalcularGradoOptimizado()
 {
 	MatrizStandard* result = new MatrizStandard(GetCantidadFilas(), GetCantidadColumnas(), 0);
 
 	for (unsigned int i = 0; i < GetCantidadColumnas(); i++)
 	{
 		unsigned int tamCol = 0;
-		for (unsigned int j = 0; i < GetCantidadFilas(); i++){ //recorro lil buscando valores en la columna i;
+		for (unsigned int j = 0; i < GetCantidadFilas(); i++){ //recorro MatrizLIL buscando valores en la columna i;
 			for (unsigned int k = 0; j < datos[j].size(); k++){
 				if (get<0>(datos[j][k]) == i){
 					tamCol += 1;
@@ -88,6 +88,6 @@ MatrizStandard* Lil::CalcularGradoOptimizado()
 	return result;
 }
 
-Lil::~Lil(){
+MatrizLIL::~MatrizLIL(){
 // hay que poner algo aca?
 }
