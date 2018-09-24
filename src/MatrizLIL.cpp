@@ -20,17 +20,17 @@ void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 	for(int i = 0; i<datos[fil].size();i++){
 		if(std::get<0>(datos[fil][i]) == col){
 			std::get<1>(datos[fil][i]) = val;
-		} else { //supongo que viene ordenada y no había repetidos
-			datos[fil].push_back(std::make_tuple(col,val));
-			for (int j = datos[fil].size(); j>0; j-- ){ //ordena el valor nuevo
-				if (std::get<0>(datos[fil][j]) < std::get<0>(datos[fil][j-1])){
-					swap(datos[fil][j], datos[fil][j-1]);
-				} else {
-					return;
-				}
-			}
+			return;
 		}
 	}
+	datos[fil].push_back(std::make_tuple(col,val));  //supongo que viene ordenada y no había repetidos
+		for (int j = datos[fil].size(); j>0; j-- ){ //ordena el valor nuevo
+			if (std::get<0>(datos[fil][j]) < std::get<0>(datos[fil][j-1])){
+				swap(datos[fil][j], datos[fil][j-1]);
+			} else {
+				return;
+			}
+			}
 }
 
 float MatrizLIL::Get(const unsigned int fil, const unsigned int col) const {
