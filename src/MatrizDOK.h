@@ -18,7 +18,7 @@ public:
 	MatrizDOK(const unsigned int filas, const unsigned int columnas);
 	MatrizDOK(const unsigned int filas, const unsigned int columnas, const float fill);
 
-	static MatrizDOK Identidad(unsigned int tam);
+	virtual Matriz* CrearIdentidad(const unsigned int& tam);
 
 	virtual void Set(const unsigned int fil, const unsigned int col, const float val);
 	virtual float Get(const unsigned int fil, const unsigned int col) const;

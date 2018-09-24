@@ -16,7 +16,8 @@ Console::Console() {
 
 std::ostream& Console::Debug()
 {
-	return c;//std::cout;
+	//return c;
+	return std::cout;
 }
 
 std::ostream& Console::Out()

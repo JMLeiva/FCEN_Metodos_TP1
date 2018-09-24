@@ -4,13 +4,11 @@
 #include <iomanip>
 #include "helpers/Console.h"
 #include <algorithm>
+#include "helpers/Tools.h"
 
 MatrizStandard::MatrizStandard(const MatrizStandard& m) : Matriz(m.GetCantidadFilas(), m.GetCantidadColumnas())
 {
-	if(this->datos != NULL)
-	{
-		delete this->datos;
-	}
+	this->datos = NULL;
 
 	SetTamano(m.GetCantidadFilas(), m.GetCantidadColumnas());
 
@@ -59,18 +57,6 @@ Matriz* MatrizStandard::Copiar() const
 }
 
 
-MatrizStandard MatrizStandard::Identidad(unsigned int tam)
-{
-	MatrizStandard result(tam, tam, 0);
-
-	for(unsigned int i = 0; i < tam; i++)
-	{
-		result.Set(i, i, 1);
-	}
-
-	return result;
-}
-
 void MatrizStandard::Set(const unsigned int fil, const unsigned int col, const float val)
 {
 	CheckPosicionesValidas(fil, col);
@@ -118,11 +104,13 @@ void MatrizStandard::Sumar(const Matriz& m2)
 	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
 	assert(GetCantidadFilas() == m2.GetCantidadFilas());
 
+	MatrizStandard copia(*this);
+
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
 		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
 		{
-			Set(fil, col, Get(fil, col) + m2.Get(fil, col));
+			Set(fil, col, copia.Get(fil, col) + m2.Get(fil, col));
 		}
 	}
 }
@@ -132,11 +120,13 @@ void MatrizStandard::Restar(const Matriz& m2)
 	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
 	assert(GetCantidadFilas() == m2.GetCantidadFilas());
 
+	MatrizStandard copia(*this);
+
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
 		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
 		{
-			Set(fil, col, Get(fil, col) - m2.Get(fil, col));
+			Set(fil, col, copia.Get(fil, col) - m2.Get(fil, col));
 		}
 	}
 }
@@ -145,23 +135,25 @@ void MatrizStandard::Multiplicar(const Matriz& m2)
 {
 	assert(GetCantidadColumnas() == m2.GetCantidadFilas());
 
-	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
+	MatrizStandard copia(*this);
+
+	for(unsigned int fil = 0; fil < copia.GetCantidadFilas(); fil++)
 	{
 		for(unsigned int col = 0; col < m2.GetCantidadColumnas(); col++)
 		{
 			float accum = 0;
 
-			for(unsigned int i = 0; i < GetCantidadColumnas(); i++)
+			for(unsigned int i = 0; i < copia.GetCantidadColumnas(); i++)
 			{
-				float v1 = Get(fil, i);
+				float v1 = copia.Get(fil, i);
 				float v2 = m2.Get(i, col);
 
-				if(EsNulo(v1) || EsNulo(v2))
+				if(Tools::EsNulo(v1) || Tools::EsNulo(v2))
 				{
 					continue;
 				}
 
-				accum += Get(fil, i) * m2.Get(i, col);
+				accum += copia.Get(fil, i) * m2.Get(i, col);
 			}
 
 			Set(fil, col, accum);
@@ -243,6 +235,18 @@ void MatrizStandard::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaD
 		float result = dstval + srcVal * escalar;
 		this->Set(filaDst, col, result);
 	}
+}
+
+Matriz* MatrizStandard::CrearIdentidad(const unsigned int& tam)
+{
+	Matriz* identidad = new MatrizStandard(tam, tam, 0);
+
+	for(unsigned int i = 0; i < tam; i++)
+	{
+		identidad->Set(i, i, 1);
+	}
+
+	return identidad;
 }
 
 MatrizStandard::~MatrizStandard()

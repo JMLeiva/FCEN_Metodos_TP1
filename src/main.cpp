@@ -2,21 +2,28 @@
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
-
+#include <assert.h>
 #include "helpers/Console.h"
 #include "helpers/IOHelper.h"
-#include "MatrizStandard.h"
+#include "MatrizDOD.h"
+
 
 void testSum();
 void testMul();
 void testGauss();
 void testSolucion();
+
+void testAleatorio();
+
 Matriz* generarMatrizGrado(const Matriz& w);
 Vector* generarVectorZ(const Matriz& D);
 
+
 int main(int argc, char* argv[])
 {
-	char* inputPath = argv[1];
+	testAleatorio();
+
+	/*char* inputPath = argv[1];
 	float p = std::stof(argv[2]);
 
 	Console::Out() << "Leyendo archivo..." << std::endl;
@@ -71,7 +78,7 @@ int main(int argc, char* argv[])
 	delete D;
 	delete W;
 	//delete i_pWD_escalonada;
-
+	*/
 	return 0;
 }
 
@@ -235,4 +242,78 @@ void testSolucion()
 
 
 	std::cout << solucion << std::endl;
+}
+
+void testAleatorio()
+{
+	Console::Out() << "Leyendo archivo..." << std::endl;
+
+	float p = 0.85;
+
+
+	Matriz* W = IO::Load("Tests/test_aleatorio.txt"); // ../
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
+
+	Console::Out() << "Generando Grado..." << std::endl;
+
+	Matriz* D = generarMatrizGrado(*W);
+	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
+
+	Console::Out() << "Generando e..." << std::endl;
+
+	Vector* e = new Vector(D->GetCantidadFilas(), 1);
+
+
+	Console::Out() << "Calculando WD..." << std::endl;
+
+	W->Multiplicar(*D);
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
+
+	Console::Out() << "Calculando pWD..." << std::endl;
+
+	W->Multiplicar(p);
+	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
+
+	Console::Out() << "Calculando I - pWD..." << std::endl;
+	Matriz* i_pWD = W->CrearIdentidad(W->GetCantidadFilas());
+
+	i_pWD->Restar(*W);
+
+	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
+
+	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
+	Vector solucion = i_pWD->ResolverSistema(*e);
+	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
+
+	solucion.Normalizar();
+
+	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
+
+
+	Vector respuesta(5);
+	respuesta.Set(0, 0.219302);
+	respuesta.Set(1, 0.0778443);
+	respuesta.Set(2, 0.202115);
+	respuesta.Set(3, 0.219302);
+	respuesta.Set(4, 0.281437);
+
+	if(solucion == respuesta)
+	{
+		Console::Debug() << "Test Success" << std::endl;
+	}
+	else
+	{
+		Console::Debug() << "Test Failed" << std::endl;
+	}
+
+
+	//testSum();
+	//testMul();
+	//testGauss();
+	//testSolucion();
+	delete e;
+	delete D;
+	delete W;
+	delete i_pWD;
+	//delete i_pWD_escalonada;
 }

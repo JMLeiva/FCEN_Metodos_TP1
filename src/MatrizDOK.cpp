@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <iomanip>
 #include "helpers/Console.h"
+#include "helpers/Tools.h"
 
 MatrizDOK::MatrizDOK(const MatrizDOK& m) : Matriz(m.GetCantidadFilas(), m.GetCantidadColumnas())
 {
@@ -33,7 +34,7 @@ MatrizDOK::MatrizDOK(const unsigned int filas, const unsigned int columnas) : Ma
 
 MatrizDOK::MatrizDOK(const unsigned int filas, const unsigned int columnas, const float fill) : Matriz(filas, columnas)
 {
-	if(EsNulo(fill))
+	if(Tools::EsNulo(fill))
 	{
 		// No hago nada
 		return;
@@ -58,25 +59,13 @@ Matriz* MatrizDOK::Copiar() const
 }
 
 
-MatrizDOK MatrizDOK::Identidad(unsigned int tam)
-{
-	MatrizDOK result(tam, tam, 0);
-
-	for(unsigned int i = 0; i < tam; i++)
-	{
-		result.Set(i, i, 1);
-	}
-
-	return result;
-}
-
 void MatrizDOK::Set(const unsigned int fil, const unsigned int col, const float val)
 {
 	CheckPosicionesValidas(fil, col);
 
 	auto key = std::make_tuple(fil, col);
 
-	if(!EsNulo(val))
+	if(!Tools::EsNulo(val))
 	{
 		datos[key] = val;
 	}
@@ -132,11 +121,13 @@ void MatrizDOK::Sumar(const Matriz& m2)
 	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
 	assert(GetCantidadFilas() == m2.GetCantidadFilas());
 
+	MatrizDOK copia(*this);
+
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
 		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
 		{
-			Set(fil, col, Get(fil, col) + m2.Get(fil, col));
+			Set(fil, col, copia.Get(fil, col) + m2.Get(fil, col));
 		}
 	}
 }
@@ -146,11 +137,13 @@ void MatrizDOK::Restar(const Matriz& m2)
 	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
 	assert(GetCantidadFilas() == m2.GetCantidadFilas());
 
+	MatrizDOK copia(*this);
+
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
 		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
 		{
-			Set(fil, col, Get(fil, col) - m2.Get(fil, col));
+			Set(fil, col, copia.Get(fil, col) - m2.Get(fil, col));
 		}
 	}
 }
@@ -158,6 +151,8 @@ void MatrizDOK::Restar(const Matriz& m2)
 void MatrizDOK::Multiplicar(const Matriz& m2)
 {
 	assert(GetCantidadColumnas() == m2.GetCantidadFilas());
+
+	MatrizDOK copia(*this);
 
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
@@ -167,15 +162,15 @@ void MatrizDOK::Multiplicar(const Matriz& m2)
 
 			for(unsigned int i = 0; i < GetCantidadColumnas(); i++)
 			{
-				float v1 = Get(fil, i);
+				float v1 = copia.Get(fil, i);
 				float v2 = m2.Get(i, col);
 
-				if(EsNulo(v1) || EsNulo(v2))
+				if(Tools::EsNulo(v1) || Tools::EsNulo(v2))
 				{
 					continue;
 				}
 
-				accum += Get(fil, i) * m2.Get(i, col);
+				accum += copia.Get(fil, i) * m2.Get(i, col);
 			}
 
 			Set(fil, col, accum);
@@ -206,6 +201,18 @@ void MatrizDOK::Extender(const Vector& v)
 	{
 		Set(fil, GetCantidadColumnas()-1, v.Get(fil));
 	}
+}
+
+Matriz* MatrizDOK::CrearIdentidad(const unsigned int& tam)
+{
+	Matriz* identidad = new MatrizDOK(tam, tam, 0);
+
+	for(unsigned int i = 0; i < tam; i++)
+	{
+		identidad->Set(i, i, 1);
+	}
+
+	return identidad;
 }
 
 
