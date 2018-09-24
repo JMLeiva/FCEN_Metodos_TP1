@@ -8,6 +8,14 @@ MatrizLIL::MatrizLIL(const unsigned int filas, const unsigned int columnas) : Ma
 	std::vector< std::vector< std::tuple<int,float> > > datos;
 }
 
+MatrizLIL MatrizLIL::Identidad(unsigned int tam){
+	MatrizLIL result(tam, tam);
+	for (unsigned int i = 0; i < tam; i++){
+		result[i].push_back(make_tuple<i,1>);
+	}
+	return result;
+}
+
 void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 	Matriz::CheckPosicionesValidas(fil,col);
 	for(int i = 0; i<datos[fil].size();i++){
@@ -33,17 +41,36 @@ float MatrizLIL::Get(const unsigned int fil, const unsigned int col) const {
 	return get<1>(datos[fil][i]);
 }
 
-void MatrizLIL::SetTamano(const unsigned int filas, const unsigned int columnas)
-{
-	Matriz::SetTamano(filas, columnas);
-	datos.clear();
+Matriz MatrizLIL::Copiar() const {
+	Matriz* copy = new MatrizLIL(*this);
+	return copy;
 }
 
-MatrizStandard MatrizLIL::operator*(const Matriz& m2)
+void MatrizLIL::Sumar(const Matriz& m2){
+	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
+	assert(GetCantidadFilas() == m2.GetCantidadFilas());
+
+	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
+		for (unsigned int j = 0; j < GetCantidadColumnas(); j++){
+			Set(i, j, Get(i,j) + m2.Get(i,j));
+		}
+	}
+}
+
+void MatrizLIL::Restar(const Matriz& m2){
+	assert(GetCantidadColumnas() == m2.GetCantidadColumnas());
+	assert(GetCantidadFilas() == m2.GetCantidadFilas());
+
+	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
+		for (unsigned int j = 0; j < GetCantidadColumnas(); j++){
+			Set(i, j, Get(i,j) - m2.Get(i,j));
+		}
+	}
+}
+
+void MatrizLIL::Multiplicar(const Matriz& m2)
 {
 	assert(GetCantidadColumnas() == m2.GetCantidadFilas());
-
-	MatrizStandard result = MatrizStandard(GetCantidadFilas(), m2.GetCantidadColumnas(), 0);
 
 	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
 		if (datos[i].size() > 0){ //recorro filas de MatrizLIL, si es nula la ignoro
@@ -51,43 +78,85 @@ MatrizStandard MatrizLIL::operator*(const Matriz& m2)
 				float accum = 0;
 				for (unsigned int k = 0; k < datos[i].size(); k++){
 					accum += get<1>(datos[i][k]) * m2.Get(get<0>(datos[i][k]), j); //fila * columna
-					result.Set(i,j, accum);
+					Set(i,j, accum);
 				}
 			}
 		}
 	}
-
-	return result;
 }
 
-MatrizStandard* MatrizLIL::CalcularGradoOptimizado()
-{
-	MatrizStandard* result = new MatrizStandard(GetCantidadFilas(), GetCantidadColumnas(), 0);
-
-	for (unsigned int i = 0; i < GetCantidadColumnas(); i++)
-	{
-		unsigned int tamCol = 0;
-		for (unsigned int j = 0; i < GetCantidadFilas(); i++){ //recorro MatrizLIL buscando valores en la columna i;
-			for (unsigned int k = 0; j < datos[j].size(); k++){
-				if (get<0>(datos[j][k]) == i){
-					tamCol += 1;
-				}
-			}
-		}
-
-		if(tamCol == 0)
-		{
-			result->Set(i, i, 0);
-		}
-		else
-		{
-			result->Set(i, i, (float)1 / tamCol);
+void MatrizLIL::Multiplicar(const float& f){
+	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
+		for (unsigned int j = 0; j < datos[i].size(); j++){
+			get<1>(datos[i][j]) *= f;
 		}
 	}
+}
 
-	return result;
+void MatrizLIL::Extender(const Vector& v){
+	assert(v.GetTamano() == GetCantidadFilas());
+	SetTamano(GetCantidadFilas(), GetCantidadColumnas()+1);
+
+	for (unsigned int i = 0; i < v.size(); i++){
+		Set(i, GetCantidadColumnas-1, v[i]);
+	}
+}
+
+void MatrizLIL::Escalonar(){
+	if(EstaEscalonada())
+	{
+		return;
+	}
+
+	// Eliminacion Gaussiana
+	unsigned int currentCol = 0;
+
+	for(unsigned int currentFil = 0; currentFil < GetCantidadFilas() && currentCol < GetCantidadColumnas() - 1; currentFil++)
+	{
+		for(unsigned int fil = currentFil+1; fil < GetCantidadFilas(); fil++)
+		{
+			float srcVal = (Get(currentFil, currentCol));
+			float dstVal = -(Get(fil, currentCol));
+
+			float escalar = dstVal / srcVal;
+			GaussSumarMultiplo(currentFil, fil, escalar, currentFil);
+
+			//Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
+		}
+
+		currentCol++;
+	}
+}
+
+void MatrizLIL::GaussMultiplicarFila(unsigned int fila, float escalar)
+{
+	for(unsigned int col = 0; col < this->GetCantidadColumnas(); col++)
+	{
+		this->Set(fila, col, this->Get(fila, col) * escalar);
+	}
+}
+
+void MatrizLIL::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar, unsigned int offset)
+{
+	//assert(filaSrc < this->GetCantidadFilas());
+	//assert(filaDst < this->GetCantidadFilas());
+
+	for(unsigned int col = offset; col < this->GetCantidadColumnas(); col++)
+	{
+		float srcVal = this->Get(filaSrc, col);
+		float dstval = this->Get(filaDst, col);
+		float result = dstval + srcVal * escalar;
+		this->Set(filaDst, col, result);
+	}
+}
+
+void MatrizLIL::SetTamano(const unsigned int filas, const unsigned int columnas)
+{
+	Matriz::SetTamano(filas, columnas);
+}
+
 }
 
 MatrizLIL::~MatrizLIL(){
-// hay que poner algo aca?
 }
