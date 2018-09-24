@@ -13,7 +13,7 @@
 
 namespace IO
 {
-	MatrizStandard* Load(const char* path);
+	Matriz* Load(const char* path);
 	void Save(const char* path, const float& p, const Vector& solucion);
 }
 
