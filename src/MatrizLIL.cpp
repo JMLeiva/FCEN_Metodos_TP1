@@ -11,7 +11,7 @@ MatrizLIL::MatrizLIL(const unsigned int filas, const unsigned int columnas) : Ma
 MatrizLIL MatrizLIL::Identidad(unsigned int tam){
 	MatrizLIL result(tam, tam);
 	for (unsigned int i = 0; i < tam; i++){
-		result[i].push_back(make_tuple<i,1>);
+		result.datos[i].push_back(std::make_tuple(i,1));
 	}
 	return result;
 }
@@ -19,12 +19,12 @@ MatrizLIL MatrizLIL::Identidad(unsigned int tam){
 void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 	Matriz::CheckPosicionesValidas(fil,col);
 	for(int i = 0; i<datos[fil].size();i++){
-		if(get<0>(datos[fil][i]) == col){
-			get<1>(datos[fil][i]) = val;
+		if(std::get<0>(datos[fil][i]) == col){
+			std::get<1>(datos[fil][i]) = val;
 		} else { //supongo que viene ordenada y no había repetidos
-			datos[fil.push_back(std::make_tuple(col,val));
+			datos[fil].push_back(std::make_tuple(col,val));
 			for (int j = datos[fil].size(); j>0; j-- ){ //ordena el valor nuevo
-				if (get<0>(datos[fil][j]) < get<0>(datos[fil][j-1])){
+				if (std::get<0>(datos[fil][j]) < std::get<0>(datos[fil][j-1])){
 					swap(datos[fil][j], datos[fil][j-1]);
 				}
 			}
@@ -35,13 +35,13 @@ void MatrizLIL::Set(const unsigned int fil, const unsigned int col, float val){
 float MatrizLIL::Get(const unsigned int fil, const unsigned int col) const {
 	CheckPosicionesValidas(fil, col);
 	int i = 0;
-	while (get<0>(datos[fil][i]) != col){
+	while (std::get<0>(datos[fil][i]) != col){
 		i++;
 	}
-	return get<1>(datos[fil][i]);
+	return std::get<1>(datos[fil][i]);
 }
 
-Matriz MatrizLIL::Copiar() const {
+Matriz* MatrizLIL::Copiar() const {
 	Matriz* copy = new MatrizLIL(*this);
 	return copy;
 }
@@ -77,7 +77,7 @@ void MatrizLIL::Multiplicar(const Matriz& m2)
 			for (unsigned int j = 0; j < m2.GetCantidadColumnas(); j++){ // recorro las columnas donde voy a calcular el valor
 				float accum = 0;
 				for (unsigned int k = 0; k < datos[i].size(); k++){
-					accum += get<1>(datos[i][k]) * m2.Get(get<0>(datos[i][k]), j); //fila * columna
+					accum += std::get<1>(datos[i][k]) * m2.Get(std::get<0>(datos[i][k]), j); //fila * columna
 					Set(i,j, accum);
 				}
 			}
@@ -88,7 +88,7 @@ void MatrizLIL::Multiplicar(const Matriz& m2)
 void MatrizLIL::Multiplicar(const float& f){
 	for (unsigned int i = 0; i < GetCantidadFilas(); i++){
 		for (unsigned int j = 0; j < datos[i].size(); j++){
-			get<1>(datos[i][j]) *= f;
+			std::get<1>(datos[i][j]) *= f;
 		}
 	}
 }
@@ -97,8 +97,8 @@ void MatrizLIL::Extender(const Vector& v){
 	assert(v.GetTamano() == GetCantidadFilas());
 	SetTamano(GetCantidadFilas(), GetCantidadColumnas()+1);
 
-	for (unsigned int i = 0; i < v.size(); i++){
-		Set(i, GetCantidadColumnas-1, v[i]);
+	for (unsigned int i = 0; i < v.GetTamano(); i++){
+		Set(i, GetCantidadColumnas()-1, v.Get(i));
 	}
 }
 
@@ -156,7 +156,7 @@ void MatrizLIL::SetTamano(const unsigned int filas, const unsigned int columnas)
 	Matriz::SetTamano(filas, columnas);
 }
 
-}
+
 
 MatrizLIL::~MatrizLIL(){
 }
