@@ -5,17 +5,20 @@
  *      Author: juan
  */
 
-#ifndef SRC_MATRIZSTANDARD_H_
-#define SRC_MATRIZSTANDARD_H_
+#ifndef SRC_MATRIZDOD_H_
+#define SRC_MATRIZDOD_H_
 
+#include "MatrizStandard.h"
+#include <map>
+#include <vector>
 #include "Matriz.h"
 
-class MatrizStandard : public Matriz
+class MatrizDOD : public Matriz
 {
 public:
-	MatrizStandard(const MatrizStandard& m);
-	MatrizStandard(const unsigned int filas, const unsigned int columnas);
-	MatrizStandard(const unsigned int filas, const unsigned int columnas, const float fill);
+	MatrizDOD(const MatrizDOD& m);
+	MatrizDOD(const unsigned int filas, const unsigned int columnas);
+	MatrizDOD(const unsigned int filas, const unsigned int columnas, const float fill);
 
 	virtual Matriz* CrearIdentidad(const unsigned int& tam);
 
@@ -31,13 +34,15 @@ public:
 	virtual void Escalonar();
 	virtual void Extender(const Vector& v);
 
-	virtual ~MatrizStandard();
+	virtual ~MatrizDOD();
 protected:
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);
 	void GaussMultiplicarFila(unsigned int fila, float escalar);
 	void GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, float escalar, unsigned int offset);
 private:
-	float** datos;
+	std::map<unsigned int, std::map<unsigned int, float> > datos;
+	std::vector<unsigned int> tamano_columna;
 };
 
-#endif /* SRC_MATRIZSTANDARD_H_ */
+
+#endif /* SRC_MATRIZDOD_H_ */

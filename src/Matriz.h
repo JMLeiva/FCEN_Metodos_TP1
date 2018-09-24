@@ -19,6 +19,7 @@ public:
 	bool EstaEscalonada() const;
 	Vector ResolverSistema(const Vector& v) const;
 	virtual Matriz* Copiar() const =0;
+	virtual Matriz* CrearIdentidad(const unsigned int& tam) =0;
 
 	virtual void Sumar(const Matriz& m2) =0;
 	virtual void Restar(const Matriz& m2)  =0;
@@ -26,7 +27,6 @@ public:
 	virtual void Multiplicar(const float& f)  =0;
 	virtual void Escalonar() =0;
 	virtual void Extender(const Vector& v)=0;
-	bool EsNulo(const float f) const;
 
 protected:
 	virtual void SetTamano(const unsigned int filas, const unsigned int columnas);

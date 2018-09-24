@@ -6,7 +6,7 @@
  */
 
 #include "IOHelper.h"
-#include "../MatrizDOK.h"
+#include "../MatrizDOD.h"
 #include "../Matriz.h"
 #include "Console.h"
 
@@ -41,7 +41,7 @@ namespace IO
 		file >> numeroDeLinks;
 		Console::Debug() << "Numero de links: " << numeroDeLinks << std::endl; // @suppress("Invalid overload")
 
-		Matriz* matriz = new MatrizDOK(numeroDePaginas, numeroDePaginas);
+		Matriz* matriz = new MatrizDOD(numeroDePaginas, numeroDePaginas);
 
 		for(unsigned int link = 0; link < numeroDeLinks; link++)
 		{

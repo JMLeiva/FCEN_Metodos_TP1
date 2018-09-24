@@ -9,6 +9,7 @@
 #include "Vector.h"
 #include <cmath>
 #include <iomanip>
+#include "helpers/Tools.h"
 
 Vector::Vector(unsigned int size)
 {
@@ -57,6 +58,18 @@ void Vector::Normalizar()
 	{
 		datos[i] /= sum;
 	}
+}
+
+bool Vector::operator==(const Vector& v) const
+{
+	if(GetTamano() != v.GetTamano()) return false;
+
+	for(unsigned int i = 0; i < GetTamano(); i++)
+	{
+		if(!Tools::Iguales(Get(i), v.Get(i))) return false;
+	}
+
+	return true;
 }
 
 Vector::~Vector() {

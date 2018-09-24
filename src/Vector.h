@@ -17,6 +17,8 @@ public:
 
 	void Normalizar();
 
+	bool operator==(const Vector& v) const;
+
 	unsigned int GetTamano() const;
 	float Get(const unsigned int i) const;
 	void Set(const unsigned int i, const float v);
