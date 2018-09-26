@@ -21,6 +21,9 @@ public:
 	virtual Matriz* Copiar() const =0;
 	virtual Matriz* CrearIdentidad(const unsigned int& tam) =0;
 
+	virtual unsigned int CantidadNoNulosColumna(unsigned int& col) const;
+	virtual unsigned int CantidadNoNulosFilas(unsigned int& fil) const;
+
 	virtual void Sumar(const Matriz& m2) =0;
 	virtual void Restar(const Matriz& m2)  =0;
 	virtual void Multiplicar(const Matriz& m2) =0;

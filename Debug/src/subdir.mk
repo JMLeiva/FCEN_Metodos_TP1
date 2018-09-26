@@ -5,24 +5,24 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/Matriz.cpp \
+../src/MatrizDOD.cpp \
 ../src/MatrizDOK.cpp \
-../src/MatrizRala.cpp \
 ../src/MatrizStandard.cpp \
 ../src/Vector.cpp \
 ../src/main.cpp 
 
 OBJS += \
 ./src/Matriz.o \
+./src/MatrizDOD.o \
 ./src/MatrizDOK.o \
-./src/MatrizRala.o \
 ./src/MatrizStandard.o \
 ./src/Vector.o \
 ./src/main.o 
 
 CPP_DEPS += \
 ./src/Matriz.d \
+./src/MatrizDOD.d \
 ./src/MatrizDOK.d \
-./src/MatrizRala.d \
 ./src/MatrizStandard.d \
 ./src/Vector.d \
 ./src/main.d 

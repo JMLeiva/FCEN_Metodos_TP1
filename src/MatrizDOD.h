@@ -26,7 +26,7 @@ public:
 	virtual float Get(const unsigned int fil, const unsigned int col) const;
 
 	virtual Matriz* Copiar() const;
-
+	virtual unsigned int CantidadNoNulosColumna(unsigned int& col) const;
 	virtual void Sumar(const Matriz& m2);
 	virtual void Restar(const Matriz& m2);
 	virtual void Multiplicar(const Matriz& m2);

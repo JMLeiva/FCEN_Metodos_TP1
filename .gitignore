@@ -4,3 +4,4 @@
 gmon.out
 *.prefs
 *.o
+/core

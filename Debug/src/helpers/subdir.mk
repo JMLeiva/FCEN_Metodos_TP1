@@ -5,15 +5,18 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/helpers/Console.cpp \
-../src/helpers/IOHelper.cpp 
+../src/helpers/IOHelper.cpp \
+../src/helpers/Tools.cpp 
 
 OBJS += \
 ./src/helpers/Console.o \
-./src/helpers/IOHelper.o 
+./src/helpers/IOHelper.o \
+./src/helpers/Tools.o 
 
 CPP_DEPS += \
 ./src/helpers/Console.d \
-./src/helpers/IOHelper.d 
+./src/helpers/IOHelper.d \
+./src/helpers/Tools.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
