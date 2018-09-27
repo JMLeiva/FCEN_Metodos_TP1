@@ -15,21 +15,41 @@ void testGauss();
 void testSolucion();
 
 void testAleatorio();
+Vector getRank(float p, const char* path);
 
 Matriz* generarMatrizGrado(const Matriz& w);
 Vector* generarVectorZ(const Matriz& D);
 
+const bool RUNTEST = true;
 
 int main(int argc, char* argv[])
 {
-	testAleatorio();
 
-	/*char* inputPath = argv[1];
-	float p = std::stof(argv[2]);
+	if(RUNTEST)
+	{
+		testAleatorio();
+	}
+	else
+	{
+		char* inputPath = argv[1];
+		float p = std::stof(argv[2]);
 
+		Vector solucion = getRank(p, inputPath);
+		std::string outPath(inputPath);
+		outPath += ".out";
+
+		IO::Save(outPath.c_str(), p, solucion);
+	}
+
+
+	return 0;
+}
+
+Vector getRank(float p, const char* path)
+{
 	Console::Out() << "Leyendo archivo..." << std::endl;
 
-	Matriz* W = IO::Load(inputPath); // ../
+	Matriz* W = IO::Load(path); // ../
 	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Generando Grado..." << std::endl;
@@ -53,23 +73,18 @@ int main(int argc, char* argv[])
 	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Calculando I - pWD..." << std::endl;
-	MatrizStandard i_pWD = MatrizStandard::Identidad(W->GetCantidadFilas());
-	i_pWD.Restar(*W);
+	Matriz* i_pWD = W->CrearIdentidad(W->GetCantidadFilas());
+	i_pWD->Restar(*W);
 
 	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
-	Vector solucion = i_pWD.ResolverSistema(*e);
+	Vector solucion = i_pWD->ResolverSistema(*e);
 	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
 	solucion.Normalizar();
 
 	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
-
-	std::string outPath(inputPath);
-	outPath += ".out";
-
-	IO::Save(outPath.c_str(), p, solucion);
 
 	//testSum();
 	//testMul();
@@ -78,9 +93,9 @@ int main(int argc, char* argv[])
 	delete e;
 	delete D;
 	delete W;
-	//delete i_pWD_escalonada;
-	*/
-	return 0;
+	delete i_pWD;
+
+	return solucion;
 }
 
 Matriz* generarMatrizGrado(const Matriz& w)
@@ -89,12 +104,7 @@ Matriz* generarMatrizGrado(const Matriz& w)
 
 	for(unsigned int col = 0; col < w.GetCantidadColumnas(); col++)
 	{
-		float accum = 0;
-
-		for(unsigned int fil = 0; fil < w.GetCantidadFilas(); fil++)
-		{
-			accum += w.Get(fil, col);
-		}
+		float accum = w.CantidadNoNulosColumna(col);
 
 		if(accum == 0)
 		{
@@ -247,46 +257,7 @@ void testSolucion()
 
 void testAleatorio()
 {
-	Console::Out() << "Leyendo archivo..." << std::endl;
-
-	float p = 0.85;
-
-
-	Matriz* W = IO::Load("Tests/test_aleatorio.txt"); // ../
-	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
-
-	Console::Out() << "Generando Grado..." << std::endl;
-
-	Matriz* D = generarMatrizGrado(*W);
-	Console::Debug() << *D << std::endl; // @suppress("Invalid overload")
-
-	Console::Out() << "Generando e..." << std::endl;
-
-	Vector* e = new Vector(D->GetCantidadFilas(), 1);
-
-
-	Console::Out() << "Calculando WD..." << std::endl;
-
-	W->Multiplicar(*D);
-	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
-
-	Console::Out() << "Calculando pWD..." << std::endl;
-
-	W->Multiplicar(p);
-	Console::Debug() << *W << std::endl; // @suppress("Invalid overload")
-
-	Console::Out() << "Calculando I - pWD..." << std::endl;
-	Matriz* i_pWD = W->CrearIdentidad(W->GetCantidadFilas());
-
-	i_pWD->Restar(*W);
-
-	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
-
-	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
-	Vector solucion = i_pWD->ResolverSistema(*e);
-	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
-
-	solucion.Normalizar();
+	Vector solucion = getRank(0.85, "Tests/test_aleatorio.txt");
 
 	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
@@ -306,15 +277,4 @@ void testAleatorio()
 	{
 		Console::Debug() << "Test Failed" << std::endl;
 	}
-
-
-	//testSum();
-	//testMul();
-	//testGauss();
-	//testSolucion();
-	delete e;
-	delete D;
-	delete W;
-	delete i_pWD;
-	//delete i_pWD_escalonada;
 }

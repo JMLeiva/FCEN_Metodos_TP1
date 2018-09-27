@@ -3,6 +3,7 @@
 #include "Matriz.h"
 #include "helpers/Console.h"
 #include <cmath>
+#include "helpers/Tools.h"
 
 
 
@@ -16,6 +17,36 @@ void Matriz::SetTamano(const unsigned int filas, const unsigned int columnas)
 {
 	this->filas = filas;
 	this->columnas = columnas;
+}
+
+unsigned int Matriz::CantidadNoNulosColumna(unsigned int& col) const
+{
+	unsigned int count = 0;
+
+	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
+	{
+		if(!Tools::EsNulo(Get(fil, col)))
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
+
+unsigned int Matriz::CantidadNoNulosFilas(unsigned int& fil) const
+{
+	unsigned int count = 0;
+
+	for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+	{
+		if(!Tools::EsNulo(Get(fil, col)))
+		{
+			count++;
+		}
+	}
+
+	return count;
 }
 
 Matriz::~Matriz()
@@ -121,7 +152,7 @@ void Matriz::CheckPosicionesValidas(const unsigned int fil, const unsigned int c
 
 std::ostream& operator<<(std::ostream& os, const Matriz& m)
 {
-	for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
+	/*for(unsigned int fil = 0; fil < m.GetCantidadFilas(); fil++)
 	{
 		os << "| ";
 
@@ -131,7 +162,7 @@ std::ostream& operator<<(std::ostream& os, const Matriz& m)
 		}
 
 		os << "     |" << std::endl;
-	}
+	}*/
 
     return os;
 }

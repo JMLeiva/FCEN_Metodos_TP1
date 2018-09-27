@@ -192,25 +192,22 @@ void MatrizStandard::Escalonar()
 	}
 
 	// Eliminacion Gaussiana
-	unsigned int currentCol = 0;
 
-	for(unsigned int currentFil = 0; currentFil < GetCantidadFilas() && currentCol < GetCantidadColumnas() - 1; currentFil++)
+	for(unsigned int currentCol = 0; currentCol < GetCantidadFilas() && currentCol < GetCantidadColumnas() - 1; currentCol++)
 	{
-		Console::Out() << currentFil << " / " << GetCantidadFilas() << std::endl;
+		Console::Out() << currentCol << " / " << GetCantidadFilas() << std::endl;
 
-		for(unsigned int fil = currentFil+1; fil < GetCantidadFilas(); fil++)
+		for(unsigned int fil = currentCol+1; fil < GetCantidadFilas(); fil++)
 		{
-			float srcVal = (Get(currentFil, currentCol));
+			float srcVal = (Get(currentCol, currentCol));
 			float dstVal = -(Get(fil, currentCol));
 
 			float escalar = dstVal / srcVal;
-			GaussSumarMultiplo(currentFil, fil, escalar, currentFil);
+			GaussSumarMultiplo(currentCol, fil, escalar, currentCol);
 
 			//Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
 			//Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
 		}
-
-		currentCol++;
 
 	}
 }

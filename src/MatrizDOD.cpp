@@ -4,6 +4,7 @@
 #include "helpers/Console.h"
 #include "MatrizDOD.h"
 #include "helpers/Tools.h"
+#include <typeinfo>
 
 MatrizDOD::MatrizDOD(const MatrizDOD& m) : Matriz(m.GetCantidadFilas(), m.GetCantidadColumnas())
 {
@@ -51,6 +52,11 @@ MatrizDOD::MatrizDOD(const unsigned int filas, const unsigned int columnas, cons
 
 	Console::Out() << "Atencion!!!!!!!!!" << std::endl << "Llenando Matriz rala con valores NO nulos" << std::endl;
 	assert(false);
+}
+
+unsigned int MatrizDOD::CantidadNoNulosColumna(unsigned int& col) const
+{
+	return tamano_columna[col];
 }
 
 Matriz* MatrizDOD::Copiar() const
@@ -182,12 +188,24 @@ void MatrizDOD::Sumar(const Matriz& m2)
 	MatrizDOD copia(*this);
 
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
-	{
-		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
 		{
-			Set(fil, col, copia.Get(fil, col) + m2.Get(fil, col));
+			auto itFila = datos.find(fil);
+
+			if(itFila == datos.end())
+			{
+				for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+				{
+					Set(fil, col, copia.Get(fil, col) - m2.Get(fil, col));
+				}
+			}
+			else
+			{
+				for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+				{
+					itFila->second[col]+= m2.Get(fil, col);
+				}
+			}
 		}
-	}
 }
 
 void MatrizDOD::Restar(const Matriz& m2)
@@ -199,18 +217,35 @@ void MatrizDOD::Restar(const Matriz& m2)
 
 	for(unsigned int fil = 0; fil < GetCantidadFilas(); fil++)
 	{
-		for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+		auto itFila = datos.find(fil);
+
+		if(itFila == datos.end())
 		{
-			Set(fil, col, copia.Get(fil, col) - m2.Get(fil, col));
+			for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+			{
+				Set(fil, col, copia.Get(fil, col) - m2.Get(fil, col));
+			}
+		}
+		else
+		{
+			for(unsigned int col = 0; col < GetCantidadColumnas(); col++)
+			{
+				itFila->second[col]-= m2.Get(fil, col);
+			}
 		}
 	}
 }
 
 void MatrizDOD::Multiplicar(const Matriz& m2)
 {
+	auto s = typeid(m2).name();
+
 	assert(GetCantidadColumnas() == m2.GetCantidadFilas());
 
 	MatrizDOD copia(*this);
+
+	unsigned int total = GetCantidadFilas();
+	unsigned int c = 0;
 
 	for(unsigned int fil = 0; fil < copia.GetCantidadFilas(); fil++)
 	{
@@ -246,12 +281,22 @@ void MatrizDOD::Multiplicar(const Matriz& m2)
 			{
 				Set(fil, col, accum);
 			}
+
+
 		}
+
+		c++;
+		Console::Out() << "Multiplicando: " << ((float)c / total) << std::endl;
 	}
 }
 
 void MatrizDOD::Multiplicar(const float& f)
 {
+	if(Tools::EsNulo(f))
+	{
+		datos.clear();
+	}
+
 	auto it = datos.begin();
 
 	while(it != datos.end())
@@ -288,32 +333,65 @@ void MatrizDOD::Escalonar()
 		return;
 	}
 
-	// Eliminacion Gaussiana
-	unsigned int currentCol = 0;
+	unsigned int total = GetCantidadFilas();
+	unsigned int c = 0;
 
-	for(unsigned int currentFil = 0; currentFil < GetCantidadFilas() && currentCol < GetCantidadColumnas() - 1; currentFil++)
+	// Eliminacion Gaussiana
+
+	for(unsigned int currentFilCol = 0; currentFilCol < GetCantidadFilas() && currentFilCol < GetCantidadColumnas() - 1; currentFilCol++)
 	{
-		for(unsigned int fil = currentFil+1; fil < GetCantidadFilas(); fil++)
+		auto itFila = datos.find(currentFilCol);
+		// Asumo que existe
+
+		for(unsigned int fil = currentFilCol+1; fil < GetCantidadFilas(); fil++)
 		{
-			float srcVal = (Get(currentFil, currentCol));
-			float dstVal = -(Get(fil, currentCol));
+
+			float srcVal = 0;
+
+
+			auto srcIt = itFila->second.find(currentFilCol);
+			if(srcIt != itFila->second.end())
+			{
+				srcVal = srcIt->second;
+			}
+
+			float dstVal = -(Get(fil, currentFilCol));
 
 			float escalar = dstVal / srcVal;
-			GaussSumarMultiplo(currentFil, fil, escalar, currentFil);
+			GaussSumarMultiplo(currentFilCol, fil, escalar, currentFilCol);
 
 			//Console::Debug() << "F" << fil << "=" << "F" << currentFil << " x " << escalar << " + " << "F" << fil << std::endl;  // @suppress("Invalid overload")
-			//Console::Debug() << m << std::endl;  // @suppress("Invalid overload")
+			//Console::Debug() << *this << std::endl;  // @suppress("Invalid overload")
 		}
 
-		currentCol++;
+		c++;
+
+		Console::Out() << "Escalonando: " << ((float)c / total) << std::endl;
 	}
 }
 
 void MatrizDOD::GaussMultiplicarFila(unsigned int fila, float escalar)
 {
-	for(unsigned int col = 0; col < this->GetCantidadColumnas(); col++)
+	auto itr = datos.find(fila);
+
+
+
+	if(itr == datos.end())
 	{
-		this->Set(fila, col, this->Get(fila, col) * escalar);
+		if(Tools::EsNulo(escalar))
+		{
+			datos.erase(fila);
+		}
+		else
+		{
+			auto itFila = itr->second.begin();
+
+			while(itFila != itr->second.end())
+			{
+				itFila->second *= escalar;
+				itFila++;
+			}
+		}
 	}
 }
 
@@ -321,13 +399,64 @@ void MatrizDOD::GaussSumarMultiplo(unsigned int filaSrc, unsigned int filaDst, f
 {
 	//assert(filaSrc < this->GetCantidadFilas());
 	//assert(filaDst < this->GetCantidadFilas());
-
-	for(unsigned int col = offset; col < this->GetCantidadColumnas(); col++)
+	if(Tools::EsNulo(escalar))
 	{
-		float srcVal = this->Get(filaSrc, col);
-		float dstval = this->Get(filaDst, col);
-		float result = dstval + srcVal * escalar;
-		this->Set(filaDst, col, result);
+		return;
+	}
+
+	if(filaSrc == filaDst)
+	{
+		GaussMultiplicarFila(filaDst, escalar);
+		return;
+	}
+
+	auto itrSrc = datos.find(filaSrc);
+
+	if(itrSrc == datos.end())
+	{
+		// Fila vacia
+		return;
+	}
+
+
+	auto itrDst = datos.find(filaDst);
+
+
+	if(itrDst == datos.end())
+	{
+		auto pair = std::make_pair(filaDst, std::map<unsigned int, float>());
+		itrDst = datos.insert(pair).first;
+	}
+
+	auto itFilaSrc = itrSrc->second.begin();
+
+	while(itFilaSrc != itrSrc->second.end())
+	{
+		unsigned int col = itFilaSrc->first;
+		float srcVal = itFilaSrc->second;
+
+		auto itFilaDst = itrDst->second.find(col);
+
+		if(itFilaDst == itrDst->second.end())
+		{
+			auto pair = std::make_pair(col, srcVal * escalar);
+			itFilaDst = itrDst->second.insert(pair).first;
+		}
+		else
+		{
+			float result = itFilaDst->second + (srcVal * escalar);
+
+			if(Tools::EsNulo(result))
+			{
+				itFilaDst->second = 0;
+			}
+			else
+			{
+				itFilaDst->second = result;
+			}
+		}
+
+		itFilaSrc++;
 	}
 }
 
