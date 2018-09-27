@@ -7,6 +7,7 @@ CPP_SRCS += \
 ../src/Matriz.cpp \
 ../src/MatrizDOD.cpp \
 ../src/MatrizDOK.cpp \
+../src/MatrizLIL.cpp \
 ../src/MatrizStandard.cpp \
 ../src/Vector.cpp \
 ../src/main.cpp 
@@ -15,6 +16,7 @@ OBJS += \
 ./src/Matriz.o \
 ./src/MatrizDOD.o \
 ./src/MatrizDOK.o \
+./src/MatrizLIL.o \
 ./src/MatrizStandard.o \
 ./src/Vector.o \
 ./src/main.o 
@@ -23,6 +25,7 @@ CPP_DEPS += \
 ./src/Matriz.d \
 ./src/MatrizDOD.d \
 ./src/MatrizDOK.d \
+./src/MatrizLIL.d \
 ./src/MatrizStandard.d \
 ./src/Vector.d \
 ./src/main.d 
@@ -32,7 +35,7 @@ CPP_DEPS += \
 src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -std=c++0x -O0 -g3 -p -pg -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -std=c++0x -Ipthread -O0 -g3 -p -pg -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

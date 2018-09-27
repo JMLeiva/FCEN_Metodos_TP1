@@ -45,7 +45,7 @@ all: MetodosTP1
 MetodosTP1: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -p -pg -o "MetodosTP1" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -p -pg -pthread -o "MetodosTP1" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -55,6 +55,5 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-.SECONDARY:
 
 -include ../makefile.targets
