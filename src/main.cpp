@@ -20,7 +20,7 @@ Vector getRank(float p, const char* path);
 Matriz* generarMatrizGrado(const Matriz& w);
 Vector* generarVectorZ(const Matriz& D);
 
-const bool RUNTEST = true;
+const bool RUNTEST = false;
 
 int main(int argc, char* argv[])
 {
@@ -76,7 +76,7 @@ Vector getRank(float p, const char* path)
 	Matriz* i_pWD = W->CrearIdentidad(W->GetCantidadFilas());
 	i_pWD->Restar(*W);
 
-	Console::Debug() << i_pWD << std::endl; // @suppress("Invalid overload")
+	Console::Debug() << *i_pWD << std::endl; // @suppress("Invalid overload")
 
 	Console::Out() << "Aplicando Eliminacion Gaussiana..." << std::endl;
 	Vector solucion = i_pWD->ResolverSistema(*e);
@@ -100,7 +100,7 @@ Vector getRank(float p, const char* path)
 
 Matriz* generarMatrizGrado(const Matriz& w)
 {
-	Matriz* result = new MatrizStandard(w.GetCantidadFilas(), w.GetCantidadColumnas(), 0);
+	Matriz* result = new MatrizDOD(w.GetCantidadFilas(), w.GetCantidadColumnas(), 0);
 
 	for(unsigned int col = 0; col < w.GetCantidadColumnas(); col++)
 	{
@@ -258,8 +258,6 @@ void testSolucion()
 void testAleatorio()
 {
 	Vector solucion = getRank(0.85, "Tests/test_aleatorio.txt");
-
-	Console::Debug() << solucion << std::endl; // @suppress("Invalid overload")
 
 
 	Vector respuesta(5);

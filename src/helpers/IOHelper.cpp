@@ -42,7 +42,7 @@ namespace IO
 		file >> numeroDeLinks;
 		Console::Debug() << "Numero de links: " << numeroDeLinks << std::endl; // @suppress("Invalid overload")
 
-		Matriz* matriz = new MatrizLIL(numeroDePaginas, numeroDePaginas);
+		Matriz* matriz = new MatrizDOD(numeroDePaginas, numeroDePaginas);
 
 		for(unsigned int link = 0; link < numeroDeLinks; link++)
 		{
